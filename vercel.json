@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npm run build:web",
+  "outputDirectory": "dist/web",
+  "framework": null,
+  "rewrites": [{ "source": "/((?!assets/|mediapipe/).*)", "destination": "/index.html" }]
+}

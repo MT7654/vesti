@@ -1,0 +1,209 @@
+{
+  "checkedAt": "2026-10-31T09:38:30.141Z",
+  "note": "Real OpenAI image and web-search requests; image is a synthetic hoodie fixture. Merchant data is fetched live and verified from structured product pages.",
+  "identification": {
+    "garment": {
+      "category": "hoodie",
+      "box": {
+        "x": 0.24,
+        "y": 0.15,
+        "width": 0.52,
+        "height": 0.7
+      },
+      "attributes": [
+        {
+          "key": "category:hoodie",
+          "kind": "category",
+          "value": "hoodie",
+          "source": "vision",
+          "evidence": null,
+          "confidence": 0.95
+        },
+        {
+          "key": "colour:dark grey",
+          "kind": "colour",
+          "value": "dark grey",
+          "source": "vision",
+          "evidence": null,
+          "confidence": 0.98
+        },
+        {
+          "key": "style:casual",
+          "kind": "style",
+          "value": "casual",
+          "source": "vision",
+          "evidence": null,
+          "confidence": 0.85
+        },
+        {
+          "key": "pattern:solid",
+          "kind": "pattern",
+          "value": "solid",
+          "source": "vision",
+          "evidence": null,
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.95,
+      "searchTerms": [
+        "dark grey hoodie",
+        "casual hoodie",
+        "hooded sweatshirt"
+      ],
+      "id": "97317754-d9af-4908-b0eb-e8eb21df397f",
+      "modelId": "gpt-4.1-mini-2025-04-14",
+      "providerRequestId": "req_604b3ecc18b74894b1eb4df1970ed0b0"
+    },
+    "receipt": {
+      "provider": "OpenAI",
+      "responseId": "resp_0d1939f4e9d27d97016ae5b715a6f887d2a43b6420b67b9ce0",
+      "model": "gpt-4.1-mini-2025-04-14",
+      "requestId": "req_604b3ecc18b74894b1eb4df1970ed0b0",
+      "usage": {
+        "input_tokens": 733,
+        "input_tokens_details": {
+          "cache_write_tokens": 0,
+          "cached_tokens": 0
+        },
+        "output_tokens": 142,
+        "output_tokens_details": {
+          "reasoning_tokens": 0
+        },
+        "total_tokens": 875
+      }
+    },
+    "durationMs": 3476
+  },
+  "evidence": {
+    "provider": "OpenAI",
+    "responseId": "resp_02cb09cc9e7e1b19016ae5b7192a4c87d28b3aa9cfb26b8188",
+    "model": "gpt-4.1-mini-2025-04-14",
+    "requestId": "req_a19af4a47865400f9bb14e5fcaaee750",
+    "usage": {
+      "input_tokens": 8623,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 378,
+      "output_tokens_details": {
+        "reasoning_tokens": 0
+      },
+      "total_tokens": 9001
+    },
+    "discovery": "OpenAI web search + local public HTML verification",
+    "searchSources": [
+      "https://thegithubshop.com/collections/apparel/products/1551101-copilot-glow-in-the-dark-hoodie?utm_source=openai",
+      "https://thegithubshop.com/products/gh-0003-github-joggers?utm_source=openai",
+      "https://thegithubshop.com/products/1538016-invertocat-pullover-hoodie?utm_source=openai",
+      "https://thegithubshop.com/products/invertocat-hoodie?utm_source=openai",
+      "https://thegithubshop.com/collections/apparel/products/1551026-universe-2724-hoodie?utm_source=openai",
+      "https://thegithubshop.com/products/hoodie-can-coozie?utm_source=openai",
+      "https://shop.spacex.com/products/unisex-starship-heatshield-pullover-hoodie?utm_source=openai",
+      "https://shop.spacex.com/products/unisex-spacex-zipper-hoodie?utm_source=openai"
+    ],
+    "merchants": [
+      {
+        "sources": [
+          "https://shop.spacex.com/products/unisex-starship-heatshield-pullover-hoodie?utm_source=openai",
+          "https://shop.spacex.com/products/unisex-spacex-zipper-hoodie?utm_source=openai"
+        ],
+        "domain": "shop.spacex.com",
+        "error": null,
+        "count": 2
+      },
+      {
+        "sources": [
+          "https://thegithubshop.com/collections/apparel/products/1551101-copilot-glow-in-the-dark-hoodie?utm_source=openai"
+        ],
+        "domain": "thegithubshop.com",
+        "error": "Merchant HTTP 404",
+        "count": 1
+      }
+    ],
+    "verifiedListings": 3
+  },
+  "discovery": {
+    "listings": [
+      {
+        "id": "6117d761-fc32-42de-84ab-44c6ccc4b015",
+        "productKey": "shop.spacex.com:STRSHPHTSHLDGRYS?variant=40595811696719",
+        "title": "Unisex Starship Heatshield Pullover Hoodie",
+        "merchantDomain": "shop.spacex.com",
+        "canonicalUrl": "https://shop.spacex.com/products/unisex-starship-heatshield-pullover-hoodie?variant=40595811696719",
+        "imageUrl": "https://shop.spacex.com/cdn/shop/products/HEATSHIELD_HOODIE_MENS_MEDIUM_BACK_1024x.png?v=1689021321",
+        "priceDecimal": "65.00",
+        "currency": "USD",
+        "availability": "in_stock",
+        "checkedAt": "2026-10-31T09:38:39.972Z",
+        "attributes": [
+          {
+            "key": "category:hoodie",
+            "kind": "category",
+            "value": "hoodie",
+            "confidence": 1,
+            "source": "merchant",
+            "evidence": "Product title: Unisex Starship Heatshield Pullover Hoodie"
+          }
+        ],
+        "sourceRunId": "773788ea-082e-4e62-952f-fe38ccbb5143",
+        "verification": "verified",
+        "demo": false
+      },
+      {
+        "id": "24ee016e-42ec-4135-8ff0-54efc2d35296",
+        "productKey": "shop.spacex.com:SPXZIPPERMILS?variant=42221535690831",
+        "title": "Unisex SpaceX Zipper Hoodie",
+        "merchantDomain": "shop.spacex.com",
+        "canonicalUrl": "https://shop.spacex.com/products/unisex-spacex-zipper-hoodie?variant=42221535690831",
+        "imageUrl": "https://shop.spacex.com/cdn/shop/files/Unisex_SpaceX_ZipHoodie_MilitaryGreen_Front_1024x.png?v=1746224104",
+        "priceDecimal": "65.00",
+        "currency": "USD",
+        "availability": "in_stock",
+        "checkedAt": "2026-10-31T09:38:40.597Z",
+        "attributes": [
+          {
+            "key": "category:hoodie",
+            "kind": "category",
+            "value": "hoodie",
+            "confidence": 1,
+            "source": "merchant",
+            "evidence": "Product title: Unisex SpaceX Zipper Hoodie"
+          }
+        ],
+        "sourceRunId": "773788ea-082e-4e62-952f-fe38ccbb5143",
+        "verification": "verified",
+        "demo": false
+      },
+      {
+        "id": "cf0e828f-45ae-482b-8de9-da1a77bbfe22",
+        "productKey": "thegithubshop.com:1551101-10?variant=42403637461080",
+        "title": "Copilot Glow-in-the-Dark Hoodie - XS / Consumer",
+        "merchantDomain": "thegithubshop.com",
+        "canonicalUrl": "https://thegithubshop.com/products/1551101-copilot-glow-in-the-dark-hoodie?variant=42403637461080",
+        "imageUrl": "https://thegithubshop.com/cdn/shop/files/CopilotGlowintheDarkHoodie_2.jpg?v=1736186858&width=1920",
+        "priceDecimal": "58.99",
+        "currency": "USD",
+        "availability": "in_stock",
+        "checkedAt": "2026-10-31T09:38:40.078Z",
+        "attributes": [
+          {
+            "key": "category:hoodie",
+            "kind": "category",
+            "value": "hoodie",
+            "confidence": 1,
+            "source": "merchant",
+            "evidence": "Product title: Copilot Glow-in-the-Dark Hoodie - XS / Consumer"
+          }
+        ],
+        "sourceRunId": "773788ea-082e-4e62-952f-fe38ccbb5143",
+        "verification": "verified",
+        "demo": false
+      }
+    ],
+    "warnings": [
+      "thegithubshop.com: Merchant HTTP 404"
+    ]
+  },
+  "discoveryDurationMs": 7155
+}

@@ -1,0 +1,81 @@
+{
+  "checkedAt": "2026-10-31T09:28:15.375Z",
+  "note": "Real provider calls. Synthetic image checks payload support only, not recognition quality. No full live shopping demonstration implied.",
+  "nosanaHealth": {
+    "ok": true,
+    "durationMs": 1293,
+    "result": {
+      "available": true,
+      "models": [
+        "qwen3.5:9b"
+      ],
+      "authentication": "no endpoint token sent; platform key intentionally withheld"
+    }
+  },
+  "neo4j": {
+    "ok": true,
+    "durationMs": 386,
+    "result": {
+      "writeReadDelete": true
+    }
+  },
+  "daytona": {
+    "ok": true,
+    "durationMs": 2348,
+    "result": {
+      "sandboxId": "8439246b-0cd0-420c-8760-a951a3286cf7",
+      "exitCode": 0,
+      "result": "{\"runtime\":\"v24.22.1\",\"ok\":true}\n"
+    }
+  },
+  "nosanaImage": {
+    "ok": true,
+    "durationMs": 2856,
+    "result": {
+      "garment": {
+        "category": "jacket",
+        "box": {
+          "x": 0.09,
+          "y": 0.1,
+          "width": 0.82,
+          "height": 0.76
+        },
+        "attributes": [
+          {
+            "key": "category:jacket",
+            "kind": "category",
+            "value": "jacket",
+            "source": "vision",
+            "evidence": null,
+            "confidence": 0.95
+          },
+          {
+            "key": "colour:olive",
+            "kind": "colour",
+            "value": "olive",
+            "source": "vision",
+            "evidence": null,
+            "confidence": 0.98
+          }
+        ],
+        "confidence": 0.95,
+        "searchTerms": [
+          "short clothing query"
+        ],
+        "id": "8f5687d2-4242-491f-b880-c1b5a73ce2ba",
+        "modelId": "qwen3.5:9b",
+        "providerRequestId": null
+      },
+      "receipt": {
+        "model": "qwen3.5:9b",
+        "deploymentId": "5xVgPuweBhxeqcNi3nRLv5i7hsjabc9SoS8ZmXtLjD1D",
+        "providerRequestId": null,
+        "usage": {
+          "promptTokens": 450,
+          "completionTokens": 109
+        },
+        "servingDurationNs": 2301909169
+      }
+    }
+  }
+}

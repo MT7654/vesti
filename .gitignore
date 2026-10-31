@@ -1,0 +1,14 @@
+# Local credentials and environment overrides
+.env
+.env.*
+!.env.example
+
+node_modules/
+dist/
+build/
+coverage/
+*.log
+.DS_Store
+artifacts/private/
+apps/web/public/mediapipe/
+.runtime/

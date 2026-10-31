@@ -1,0 +1,133 @@
+{
+  "checkedAt": "2026-10-31T09:34:57.694Z",
+  "note": "Local adapter validation only. This does not bypass or satisfy the required Daytona shopping execution.",
+  "listings": [
+    {
+      "id": "407702d0-d18d-4f0f-9ad7-9489ecd0591b",
+      "productKey": "shop.spacex.com:STRSHPHTSHLDGRYS?variant=40595811696719",
+      "title": "Unisex Starship Heatshield Pullover Hoodie",
+      "merchantDomain": "shop.spacex.com",
+      "canonicalUrl": "https://shop.spacex.com/products/unisex-starship-heatshield-pullover-hoodie?variant=40595811696719",
+      "imageUrl": "https://shop.spacex.com/cdn/shop/products/HEATSHIELD_HOODIE_MENS_MEDIUM_BACK_1024x.png?v=1689021321",
+      "priceDecimal": "65.00",
+      "currency": "USD",
+      "availability": "in_stock",
+      "checkedAt": "2026-10-31T09:34:56.029Z",
+      "attributes": [
+        {
+          "kind": "category",
+          "value": "hoodie",
+          "key": "category:hoodie",
+          "source": "merchant",
+          "confidence": 1,
+          "evidence": "Product title: Unisex Starship Heatshield Pullover Hoodie"
+        }
+      ],
+      "sourceRunId": "local-adapter-validation",
+      "verification": "verified",
+      "demo": false
+    },
+    {
+      "id": "cdb2e9ac-5099-4a1e-99c6-501d293a169c",
+      "productKey": "shop.spacex.com:SPXPLOVRCHRS?variant=42221306773583",
+      "title": "Unisex SpaceX Pullover Hoodie",
+      "merchantDomain": "shop.spacex.com",
+      "canonicalUrl": "https://shop.spacex.com/products/unisex-spacex-pullover-hoodie?variant=42221306773583",
+      "imageUrl": "https://shop.spacex.com/cdn/shop/files/Unisex_SpaceX_PulloverHoodie_Charcoal_Front_1024x.png?v=1746224079",
+      "priceDecimal": "65.00",
+      "currency": "USD",
+      "availability": "in_stock",
+      "checkedAt": "2026-10-31T09:34:56.883Z",
+      "attributes": [
+        {
+          "kind": "category",
+          "value": "hoodie",
+          "key": "category:hoodie",
+          "source": "merchant",
+          "confidence": 1,
+          "evidence": "Product title: Unisex SpaceX Pullover Hoodie"
+        }
+      ],
+      "sourceRunId": "local-adapter-validation",
+      "verification": "verified",
+      "demo": false
+    },
+    {
+      "id": "1fcee84f-11b0-4e83-bdf0-8a5474db43e4",
+      "productKey": "shop.spacex.com:SPXZIPPERMILS?variant=42221535690831",
+      "title": "Unisex SpaceX Zipper Hoodie",
+      "merchantDomain": "shop.spacex.com",
+      "canonicalUrl": "https://shop.spacex.com/products/unisex-spacex-zipper-hoodie?variant=42221535690831",
+      "imageUrl": "https://shop.spacex.com/cdn/shop/files/Unisex_SpaceX_ZipHoodie_MilitaryGreen_Front_1024x.png?v=1746224104",
+      "priceDecimal": "65.00",
+      "currency": "USD",
+      "availability": "in_stock",
+      "checkedAt": "2026-10-31T09:34:57.694Z",
+      "attributes": [
+        {
+          "kind": "category",
+          "value": "hoodie",
+          "key": "category:hoodie",
+          "source": "merchant",
+          "confidence": 1,
+          "evidence": "Product title: Unisex SpaceX Zipper Hoodie"
+        }
+      ],
+      "sourceRunId": "local-adapter-validation",
+      "verification": "verified",
+      "demo": false
+    },
+    {
+      "id": "f7026c97-4801-4243-9061-263d445d2437",
+      "productKey": "thegithubshop.com:1538440-10?variant=42348542951512",
+      "title": "\"The Classic\" Invertocat Hoodie - XS / Consumer",
+      "merchantDomain": "thegithubshop.com",
+      "canonicalUrl": "https://thegithubshop.com/products/invertocat-hoodie?variant=42348542951512",
+      "imageUrl": "https://thegithubshop.com/cdn/shop/files/Apparel_Outerwear_Invertocat_Hoodie_Detail.jpg?v=1729272993&width=1920",
+      "priceDecimal": "57.00",
+      "currency": "USD",
+      "availability": "in_stock",
+      "checkedAt": "2026-10-31T09:34:54.481Z",
+      "attributes": [
+        {
+          "kind": "category",
+          "value": "hoodie",
+          "key": "category:hoodie",
+          "source": "merchant",
+          "confidence": 1,
+          "evidence": "Product title: \"The Classic\" Invertocat Hoodie - XS / Consumer"
+        }
+      ],
+      "sourceRunId": "local-adapter-validation",
+      "verification": "verified",
+      "demo": false
+    }
+  ],
+  "merchants": [
+    {
+      "sources": [
+        "https://shop.spacex.com/collections/all",
+        "https://shop.spacex.com/collections/all-spacex-products/products/spacex-x-baseball-cap-l-xl-black",
+        "https://shop.spacex.com/collections/all-spacex-products/products/unisex-starship-heatshield-pullover-hoodie",
+        "https://shop.spacex.com/collections/all-spacex-products/products/unisex-spacex-pullover-hoodie",
+        "https://shop.spacex.com/collections/all-spacex-products/products/unisex-spacex-zipper-hoodie"
+      ],
+      "domain": "shop.spacex.com",
+      "error": null,
+      "count": 3
+    },
+    {
+      "sources": [
+        "https://thegithubshop.com/collections/all",
+        "https://thegithubshop.com/products/invertocat-hoodie",
+        "https://thegithubshop.com/products/1548074-00-ship-it-diner-mug",
+        "https://thegithubshop.com/products/1547490-00-50-assorted-sticker-pack",
+        "https://thegithubshop.com/products/500-piece-jigsaw-puzzle"
+      ],
+      "domain": "thegithubshop.com",
+      "error": null,
+      "count": 1
+    }
+  ],
+  "extraction": "public-product-jsonld-v1"
+}

@@ -1,0 +1,277 @@
+{
+  "checkedAt": "2026-10-31T09:51:15.437Z",
+  "note": "Real product-image recognition, OpenAI web search, direct merchant verification, Daytona candidate curation, Neo4j ingest/ranking, scoped handoff and style-illustration asset. Physical webcam tracking and Chrome capture are separate manual checks.",
+  "fixture": {
+    "imageUrl": "https://shop.spacex.com/cdn/shop/files/Unisex_SpaceX_PulloverHoodie_Charcoal_Front_1024x.png?v=1746224079",
+    "productUrl": "https://shop.spacex.com/products/unisex-spacex-pullover-hoodie?variant=42221306773583"
+  },
+  "durationMs": 12872,
+  "search": {
+    "schemaVersion": 1,
+    "id": "f5e7249a-8c47-4971-a226-bcc8a0f5a462",
+    "stage": "partial",
+    "demo": false,
+    "createdAt": "2026-10-31T09:51:15.904Z",
+    "updatedAt": "2026-10-31T09:51:28.638Z",
+    "selection": {
+      "click": {
+        "x": 0.5,
+        "y": 0.5
+      },
+      "videoTime": 0,
+      "locale": "en-US"
+    },
+    "recommendations": [
+      {
+        "id": "134f4003-a71e-42ca-a59a-1f613efdf120",
+        "productKey": "thegithubshop.com:1562067-01?variant=44499977404504",
+        "title": "Dither Mona Hoodie - Consumer / S",
+        "merchantDomain": "thegithubshop.com",
+        "canonicalUrl": "https://thegithubshop.com/products/zozotown-hoodie?variant=44499977404504",
+        "imageUrl": "https://thegithubshop.com/cdn/shop/files/1562067.jpg?v=1777604636&width=1920",
+        "priceDecimal": "60.00",
+        "currency": "USD",
+        "availability": "in_stock",
+        "checkedAt": "2026-10-31T09:51:23.220Z",
+        "attributes": [
+          {
+            "key": "category:hoodie",
+            "kind": "category",
+            "value": "hoodie",
+            "confidence": 1,
+            "source": "merchant",
+            "evidence": "Product title: Dither Mona Hoodie - Consumer / S"
+          }
+        ],
+        "sourceRunId": "f5e7249a-8c47-4971-a226-bcc8a0f5a462",
+        "verification": "verified",
+        "demo": false,
+        "score": 0.38111111111111107,
+        "reasons": [
+          {
+            "attributeKey": "category:hoodie",
+            "evidence": "Product title: Dither Mona Hoodie - Consumer / S"
+          }
+        ],
+        "components": {
+          "category": 0.98,
+          "colour": 0,
+          "pattern": 0,
+          "style": 0,
+          "material": 0
+        },
+        "matchType": "similar",
+        "rankingVersion": "attribute-v1",
+        "overlayStatus": "unavailable"
+      }
+    ],
+    "warnings": [
+      "shop.spacex.com: Merchant HTTP 429",
+      "thegithubshop.com: Merchant HTTP 404"
+    ],
+    "evidence": {
+      "nosana": {
+        "state": "not_started"
+      },
+      "daytona": {
+        "state": "succeeded",
+        "details": {
+          "role": "Candidate validation and deduplication",
+          "sandboxId": "7d08037a-5c9f-49b0-815d-6da48cb7a02e",
+          "workerSha256": "eb13783bd7d11fa44d58a857ba89325bd92901597e0d07b41fdcc945ed9e65cd",
+          "network": "No outbound requests; existing account firewall policy",
+          "exitCode": 0,
+          "policy": "candidate-curation-v1",
+          "inputCount": 1,
+          "acceptedCount": 1,
+          "rejected": [],
+          "inputSha256": "74169442774f14e4bf6d31a3d0dff94c3d70cc2cdbd11a5a07842af33786b1ee",
+          "outputSha256": "74169442774f14e4bf6d31a3d0dff94c3d70cc2cdbd11a5a07842af33786b1ee"
+        },
+        "durationMs": 3573
+      },
+      "neo4j": {
+        "state": "succeeded",
+        "durationMs": 880,
+        "details": {
+          "listings": 1,
+          "garmentAttributes": 4,
+          "queryVersion": "attribute-v1",
+          "rows": [
+            {
+              "id": "134f4003-a71e-42ca-a59a-1f613efdf120",
+              "score": 0.38111111111111107,
+              "components": {
+                "category": 0.98,
+                "colour": 0,
+                "pattern": 0,
+                "style": 0,
+                "material": 0
+              },
+              "reasons": [
+                {
+                  "attributeKey": "category:hoodie",
+                  "evidence": "Product title: Dither Mona Hoodie - Consumer / S"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "fresh": true,
+      "cost": "unknown",
+      "cleanup": "deleted",
+      "mode": "openai",
+      "openai": {
+        "state": "succeeded",
+        "durationMs": 7892,
+        "details": {
+          "recognition": {
+            "provider": "OpenAI",
+            "responseId": "resp_0620c6ab0c6c5c48016ae5ba13b76c87d2b0444a0ebad9333c",
+            "model": "gpt-4.1-mini-2025-04-14",
+            "requestId": "req_fc41673224214b828402bd347690b351",
+            "usage": {
+              "input_tokens": 1658,
+              "input_tokens_details": {
+                "cache_write_tokens": 0,
+                "cached_tokens": 1024
+              },
+              "output_tokens": 140,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 1798
+            }
+          },
+          "discovery": {
+            "provider": "OpenAI",
+            "responseId": "resp_021f65611635a693016ae5ba16111c87d2ae992668474c57c5",
+            "model": "gpt-4.1-mini-2025-04-14",
+            "requestId": "req_2d9a8383003c4362841b0b678d269288",
+            "usage": {
+              "input_tokens": 8621,
+              "input_tokens_details": {
+                "cache_write_tokens": 0,
+                "cached_tokens": 0
+              },
+              "output_tokens": 427,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 9048
+            },
+            "discovery": "OpenAI web search + local public HTML verification",
+            "searchSources": [
+              "https://thegithubshop.com/collections/new-arrivals/products/zozotown-hoodie?utm_source=openai",
+              "https://thegithubshop.com/products/1538016-invertocat-pullover-hoodie?utm_source=openai",
+              "https://thegithubshop.com/products/invertocat-trans-pride-hoodie?utm_source=openai",
+              "https://thegithubshop.com/products/1540434-octokitten-hoodie?utm_source=openai",
+              "https://thegithubshop.com/collections/apparel/products/1551101-copilot-glow-in-the-dark-hoodie?utm_source=openai",
+              "https://shop.spacex.com/products/unisex-starship-heatshield-pullover-hoodie?utm_source=openai",
+              "https://shop.spacex.com/products/kid-s-starman-hoodie?utm_source=openai",
+              "https://shop.spacex.com/products/unisex-spacex-zipper-hoodie?utm_source=openai"
+            ],
+            "merchants": [
+              {
+                "sources": [],
+                "domain": "shop.spacex.com",
+                "error": "Merchant HTTP 429",
+                "count": 0
+              },
+              {
+                "sources": [
+                  "https://thegithubshop.com/collections/new-arrivals/products/zozotown-hoodie?utm_source=openai"
+                ],
+                "domain": "thegithubshop.com",
+                "error": "Merchant HTTP 404",
+                "count": 1
+              }
+            ],
+            "verifiedListings": 1
+          }
+        }
+      }
+    },
+    "queued": false,
+    "garment": {
+      "category": "hoodie",
+      "box": {
+        "x": 0.15,
+        "y": 0.1,
+        "width": 0.7,
+        "height": 0.8
+      },
+      "attributes": [
+        {
+          "key": "category:hoodie",
+          "kind": "category",
+          "value": "hoodie",
+          "source": "vision",
+          "evidence": null,
+          "confidence": 0.98
+        },
+        {
+          "key": "colour:black",
+          "kind": "colour",
+          "value": "black",
+          "source": "vision",
+          "evidence": null,
+          "confidence": 0.99
+        },
+        {
+          "key": "pattern:solid",
+          "kind": "pattern",
+          "value": "solid",
+          "source": "vision",
+          "evidence": null,
+          "confidence": 0.99
+        },
+        {
+          "key": "style:casual",
+          "kind": "style",
+          "value": "casual",
+          "source": "vision",
+          "evidence": null,
+          "confidence": 0.95
+        }
+      ],
+      "confidence": 0.98,
+      "searchTerms": [
+        "black hoodie",
+        "casual hoodie",
+        "solid color hoodie"
+      ],
+      "id": "cd42817e-fd9b-4c47-b61e-a900037da45f",
+      "modelId": "gpt-4.1-mini-2025-04-14",
+      "providerRequestId": "req_fc41673224214b828402bd347690b351"
+    }
+  },
+  "fitting": {
+    "handoffStatus": 200,
+    "sessionStatus": 200,
+    "overlayStatus": 200,
+    "illustration": true,
+    "graph": [
+      {
+        "source": "f5e7249a-8c47-4971-a226-bcc8a0f5a462",
+        "relationship": "SELECTED",
+        "target": "cd42817e-fd9b-4c47-b61e-a900037da45f",
+        "label": "VestiGarment"
+      },
+      {
+        "source": "f5e7249a-8c47-4971-a226-bcc8a0f5a462",
+        "relationship": "FOUND",
+        "target": "134f4003-a71e-42ca-a59a-1f613efdf120",
+        "label": "VestiListing"
+      },
+      {
+        "source": "f5e7249a-8c47-4971-a226-bcc8a0f5a462",
+        "relationship": "RECOMMENDS",
+        "target": "134f4003-a71e-42ca-a59a-1f613efdf120",
+        "label": "VestiListing"
+      }
+    ]
+  },
+  "ok": true
+}

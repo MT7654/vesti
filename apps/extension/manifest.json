@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Vesti · Shop what you watch",
+  "version": "0.1.0",
+  "description": "Select a garment on YouTube, discover similar styles, and preview them locally with your camera.",
+  "minimum_chrome_version": "120",
+  "permissions": ["activeTab", "scripting", "sidePanel", "storage"],
+  "host_permissions": ["http://127.0.0.1:3001/*", "http://localhost:3001/*"],
+  "action": { "default_title": "Find this look with Vesti" },
+  "background": { "service_worker": "background.js", "type": "module" },
+  "side_panel": { "default_path": "sidepanel.html" },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; connect-src http://127.0.0.1:3001 http://localhost:3001 data: blob:; img-src 'self' data: blob: https:; style-src 'self';"
+  }
+}
