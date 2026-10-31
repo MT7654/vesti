@@ -2,6 +2,30 @@
 
 A working hackathon app and Chrome extension: select clothing in a YouTube video, find similar products, and preview a style with a local camera overlay. React, Fastify, TypeScript and Neo4j; one package and no separate task broker.
 
+## Start here: judges and automated reviewers
+
+Vesti connects visual inspiration to a product decision: select clothing, inspect similar finds, then open a private camera preview. Its MVP covers jackets, hoodies and T-shirts; it does not claim exact identity, garment fit or automated checkout.
+
+- [Two-minute judge walkthrough](JUDGES.md)
+- [Executable evaluation and fallback matrix](EVALUATION.md)
+- [Contributor guidance](AGENTS.md)
+- [Deployment](docs/DEPLOYMENT.md) · [Measured verification](docs/VERIFICATION.md)
+
+No credentials: `npm ci`, then `npm run evaluate`. For the browser, run `npm run dev:demo`, pair using the terminal code and choose **Explore the demo collection**. This creates three labelled sample products without calling external providers. Installation and the initial camera-model download require network access.
+
+```mermaid
+flowchart LR
+  Selection[Video crop or uploaded frame] --> AI[OpenAI recognition and search]
+  AI --> Offers[Public merchant offer extraction]
+  Offers --> Daytona[Daytona candidate checks]
+  Daytona --> Graph[Neo4j ranking]
+  Graph --> Results[Product cards]
+  Results --> Handoff[Single-use Try-On handoff]
+  Handoff --> Camera[Local browser camera overlay]
+```
+
+The explicit demo path uses synthetic listings and no live receipts. A failed live run remains a failure; choosing demo starts a separate labelled experience.
+
 ## Run
 
 Use Node 24 and Chrome 120 or newer.
@@ -14,7 +38,7 @@ npm run build
 npm run dev
 ```
 
-Open http://localhost:5173 and enter the one-time pairing code printed in the terminal. The existing local `.env` is already configured. `LIVE_PROVIDER=auto` uses the OpenAI key when present. Standard `OPENAI_API_KEY` and the existing `OpenAI_API_Key` spelling are supported.
+Open http://localhost:5173 and enter the one-time pairing code printed in the terminal. A fresh clone has no credentials; configure your own `.env` for live mode. `LIVE_PROVIDER=auto` uses the OpenAI key when present. Standard `OPENAI_API_KEY` and the existing `OpenAI_API_Key` spelling are supported.
 
 Click **Try a live search** for a quick demonstration: an original illustrated hoodie goes through real image recognition, public web search, merchant-page verification, Daytona candidate curation and graph ranking. Alternatively upload a frame and click the garment. **Explore the demo collection** works without model calls and clearly labels its illustrated products and sample prices.
 

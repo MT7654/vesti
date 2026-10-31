@@ -15,7 +15,9 @@
     "test:graph": "tsx tests/graph.integration.ts",
     "smoke:discovery": "tsx scripts/discovery-smoke.ts",
     "build:web": "tsx scripts/assets.ts && vite build --config apps/web/vite.config.ts",
-    "start:api": "tsx apps/api/index.ts"
+    "start:api": "tsx apps/api/index.ts",
+    "evaluate": "tsx --test tests/api.test.ts",
+    "dev:demo": "tsx scripts/demo.ts"
   },
   "dependencies": {
     "@daytona/sdk": "0.227.0",
