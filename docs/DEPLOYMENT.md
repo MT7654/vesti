@@ -25,3 +25,5 @@ For a fully local demo, leave VITE_API_BASE_URL unset, use WEB_ORIGIN=http://loc
 Check the HTTPS API /health/ready, open the extension, complete one live search, click Try-On, and confirm the Vercel page loads that product. Enable the camera manually and check pose alignment. API availability, CORS, extension capture and camera permissions are distinct checks; a successful build alone does not prove them.
 
 References: [Vercel Vite deployment](https://vercel.com/docs/frameworks/frontend/vite), [Vite public environment variables](https://vite.dev/guide/env-and-mode).
+
+Live product previews use OpenAI image edits (gpt-image-1.5), which may require model access and incur image-generation charges. Keep API requests open for up to 150 seconds on the API host/proxy. Extracted assets are cached under .runtime/garments; use an ephemeral or persistent writable volume as appropriate. Do not publish that directory directly. No generated file is placed in the extension bundle.

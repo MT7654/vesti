@@ -60,7 +60,7 @@ export function productsFrom(html) {
 }
 export async function discover(input) {
   const results = await Promise.all(
-    input.domains.slice(0, 2).map(async (domain) => {
+    input.domains.slice(0, 4).map(async (domain) => {
       const listings = [];
       const sources = [];
       try {
@@ -69,15 +69,17 @@ export async function discover(input) {
           robots = (await safeGet(`${origin}/robots.txt`, [domain])).body;
         // Public HTML only; do not use private/ajax feeds or crawl blocked search routes.
         const path = "/collections/all";
-        if (!robotsAllows(robots, path))
+        if (!input.urls?.length && !robotsAllows(robots, path))
           throw new Error("Collection access disallowed by robots policy");
         const supplied = (input.urls || []).filter((url) => {
           try {
-            return allowedUrl(url, [domain]).pathname.includes("/products/");
+            return allowedUrl(url, [domain]).pathname !== "/";
           } catch {
             return false;
           }
         });
+        if (input.urls?.length && !supplied.length)
+          return { listings, sources, domain, error: null };
         const collection = supplied.length
           ? null
           : await safeGet(origin + path, [domain]);
@@ -139,7 +141,7 @@ export async function discover(input) {
                 v.protocol === "https:" &&
                 !v.username &&
                 !v.password &&
-                [domain, "cdn.shopify.com"].includes(v.hostname) &&
+                !/^\d+\./.test(v.hostname) &&
                 (!v.port || v.port === "443")
               )
                 imageUrl = v.href;
@@ -173,8 +175,7 @@ export async function discover(input) {
                 domain,
               ]);
               if (
-                offered.pathname.split("/products/")[1] ===
-                  canonical.pathname.split("/products/")[1] &&
+                offered.pathname === canonical.pathname &&
                 robotsAllows(robots, offered.pathname + offered.search)
               )
                 canonical = offered;

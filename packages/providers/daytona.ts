@@ -232,7 +232,7 @@ export async function curateCandidates(
       Buffer.from(
         JSON.stringify({
           listings,
-          domains: config.merchants.slice(0, 2),
+          domains: [...new Set(listings.map((l) => l.merchantDomain))],
           category: garment.category,
           runId,
         }),

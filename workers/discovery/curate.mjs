@@ -20,7 +20,7 @@ export function curate({ listings, domains, category, runId }) {
         (url.port && url.port !== "443") ||
         !domains.includes(url.hostname) ||
         url.hostname !== item.merchantDomain ||
-        !url.pathname.startsWith("/products/")
+        url.pathname === "/"
       )
         reason = "unapproved_product_url";
       else if (

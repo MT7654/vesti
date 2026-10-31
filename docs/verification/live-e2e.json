@@ -1,18 +1,18 @@
 {
-  "checkedAt": "2026-10-31T09:51:15.437Z",
-  "note": "Real product-image recognition, OpenAI web search, direct merchant verification, Daytona candidate curation, Neo4j ingest/ranking, scoped handoff and style-illustration asset. Physical webcam tracking and Chrome capture are separate manual checks.",
+  "checkedAt": "2026-10-31T10:23:20.732Z",
+  "note": "Real product-image recognition, broad OpenAI web search, merchant verification, Daytona candidate curation, Neo4j ranking, scoped handoff and AI garment extraction from the selected product photo. Physical webcam tracking and Chrome capture remain manual checks.",
   "fixture": {
     "imageUrl": "https://shop.spacex.com/cdn/shop/files/Unisex_SpaceX_PulloverHoodie_Charcoal_Front_1024x.png?v=1746224079",
     "productUrl": "https://shop.spacex.com/products/unisex-spacex-pullover-hoodie?variant=42221306773583"
   },
-  "durationMs": 12872,
+  "durationMs": 21321,
   "search": {
     "schemaVersion": 1,
-    "id": "f5e7249a-8c47-4971-a226-bcc8a0f5a462",
+    "id": "baf67f40-d4bf-4b60-a99f-c4403543ac79",
     "stage": "partial",
     "demo": false,
-    "createdAt": "2026-10-31T09:51:15.904Z",
-    "updatedAt": "2026-10-31T09:51:28.638Z",
+    "createdAt": "2026-10-31T10:23:20.990Z",
+    "updatedAt": "2026-10-31T10:23:42.130Z",
     "selection": {
       "click": {
         "x": 0.5,
@@ -23,16 +23,16 @@
     },
     "recommendations": [
       {
-        "id": "134f4003-a71e-42ca-a59a-1f613efdf120",
-        "productKey": "thegithubshop.com:1562067-01?variant=44499977404504",
-        "title": "Dither Mona Hoodie - Consumer / S",
-        "merchantDomain": "thegithubshop.com",
-        "canonicalUrl": "https://thegithubshop.com/products/zozotown-hoodie?variant=44499977404504",
-        "imageUrl": "https://thegithubshop.com/cdn/shop/files/1562067.jpg?v=1777604636&width=1920",
-        "priceDecimal": "60.00",
-        "currency": "USD",
+        "id": "433300b0-ce04-47a5-8b90-3c51d3cd375a",
+        "productKey": "www.fashionnova.com:JU040_Black_XS?color=black&variant=12197759058044",
+        "title": "Relaxed Vibe Solid Hoodie - Black",
+        "merchantDomain": "www.fashionnova.com",
+        "canonicalUrl": "https://www.fashionnova.com/en-mc/products/relaxed-vibe-solid-hoodie?color=black&variant=12197759058044",
+        "imageUrl": "https://cdn.shopify.com/s/files/1/0293/9277/products/11-05-18_Studio_2_13-32-13_JU040_Black0521_AJ_JF.jpg?v=1763426725",
+        "priceDecimal": "12.95",
+        "currency": "EUR",
         "availability": "in_stock",
-        "checkedAt": "2026-10-31T09:51:23.220Z",
+        "checkedAt": "2026-10-31T10:23:34.791Z",
         "attributes": [
           {
             "key": "category:hoodie",
@@ -40,34 +40,123 @@
             "value": "hoodie",
             "confidence": 1,
             "source": "merchant",
-            "evidence": "Product title: Dither Mona Hoodie - Consumer / S"
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+          },
+          {
+            "key": "colour:black",
+            "kind": "colour",
+            "value": "black",
+            "confidence": 1,
+            "source": "merchant",
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+          },
+          {
+            "key": "pattern:solid",
+            "kind": "pattern",
+            "value": "solid",
+            "confidence": 1,
+            "source": "merchant",
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
           }
         ],
-        "sourceRunId": "f5e7249a-8c47-4971-a226-bcc8a0f5a462",
+        "sourceRunId": "baf67f40-d4bf-4b60-a99f-c4403543ac79",
         "verification": "verified",
         "demo": false,
-        "score": 0.38111111111111107,
+        "score": 0.8144444444444444,
         "reasons": [
           {
             "attributeKey": "category:hoodie",
-            "evidence": "Product title: Dither Mona Hoodie - Consumer / S"
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+          },
+          {
+            "attributeKey": "colour:black",
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+          },
+          {
+            "attributeKey": "pattern:solid",
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
           }
         ],
         "components": {
           "category": 0.98,
-          "colour": 0,
-          "pattern": 0,
+          "colour": 0.99,
+          "pattern": 0.95,
           "style": 0,
           "material": 0
         },
         "matchType": "similar",
         "rankingVersion": "attribute-v1",
-        "overlayStatus": "unavailable"
+        "overlayStatus": "ready"
+      },
+      {
+        "id": "edf666da-f86c-4fc7-b7f3-8ec7710e3fa9",
+        "productKey": "www.fashionnova.com:JU040_Black_XS?color=black&utm_source=openai",
+        "title": "Relaxed Vibe Solid Hoodie - Black",
+        "merchantDomain": "www.fashionnova.com",
+        "canonicalUrl": "https://www.fashionnova.com/products/relaxed-vibe-solid-hoodie?color=black&utm_source=openai",
+        "imageUrl": "https://cdn.shopify.com/s/files/1/0293/9277/products/11-05-18_Studio_2_13-32-13_JU040_Black0521_AJ_JF.jpg?v=1763426725",
+        "priceDecimal": "19.00",
+        "currency": "SGD",
+        "availability": "in_stock",
+        "checkedAt": "2026-10-31T10:23:33.218Z",
+        "attributes": [
+          {
+            "key": "category:hoodie",
+            "kind": "category",
+            "value": "hoodie",
+            "confidence": 1,
+            "source": "merchant",
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+          },
+          {
+            "key": "colour:black",
+            "kind": "colour",
+            "value": "black",
+            "confidence": 1,
+            "source": "merchant",
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+          },
+          {
+            "key": "pattern:solid",
+            "kind": "pattern",
+            "value": "solid",
+            "confidence": 1,
+            "source": "merchant",
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+          }
+        ],
+        "sourceRunId": "baf67f40-d4bf-4b60-a99f-c4403543ac79",
+        "verification": "verified",
+        "demo": false,
+        "score": 0.8144444444444444,
+        "reasons": [
+          {
+            "attributeKey": "category:hoodie",
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+          },
+          {
+            "attributeKey": "colour:black",
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+          },
+          {
+            "attributeKey": "pattern:solid",
+            "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+          }
+        ],
+        "components": {
+          "category": 0.98,
+          "colour": 0.99,
+          "pattern": 0.95,
+          "style": 0,
+          "material": 0
+        },
+        "matchType": "similar",
+        "rankingVersion": "attribute-v1",
+        "overlayStatus": "ready"
       }
     ],
     "warnings": [
-      "shop.spacex.com: Merchant HTTP 429",
-      "thegithubshop.com: Merchant HTTP 404"
+      "www.macys.com: Merchant HTTP 403"
     ],
     "evidence": {
       "nosana": {
@@ -77,41 +166,83 @@
         "state": "succeeded",
         "details": {
           "role": "Candidate validation and deduplication",
-          "sandboxId": "7d08037a-5c9f-49b0-815d-6da48cb7a02e",
-          "workerSha256": "eb13783bd7d11fa44d58a857ba89325bd92901597e0d07b41fdcc945ed9e65cd",
+          "sandboxId": "d7c80101-940f-46bf-9d35-573ec8f16469",
+          "workerSha256": "4e0137878cb57c49158926b2ef8aed752645b0b427e40c2e9966aaf0c2988fc0",
           "network": "No outbound requests; existing account firewall policy",
           "exitCode": 0,
           "policy": "candidate-curation-v1",
-          "inputCount": 1,
-          "acceptedCount": 1,
-          "rejected": [],
-          "inputSha256": "74169442774f14e4bf6d31a3d0dff94c3d70cc2cdbd11a5a07842af33786b1ee",
-          "outputSha256": "74169442774f14e4bf6d31a3d0dff94c3d70cc2cdbd11a5a07842af33786b1ee"
+          "inputCount": 5,
+          "acceptedCount": 3,
+          "rejected": [
+            {
+              "id": "31dec219-261c-42b0-96bc-12bc0613fba4",
+              "reason": "duplicate"
+            },
+            {
+              "id": "56f8a2e8-c0cb-46d2-8c01-802d872420b7",
+              "reason": "duplicate"
+            }
+          ],
+          "inputSha256": "4821f88799b9b6cd1bf2824f78cec69ce66a80baf5d24b7455a546e99ba08cf2",
+          "outputSha256": "d2630e810f5a638d217f532a871a929e85f841fff2338bee403e82d5874a09d0"
         },
-        "durationMs": 3573
+        "durationMs": 2548
       },
       "neo4j": {
         "state": "succeeded",
-        "durationMs": 880,
+        "durationMs": 905,
         "details": {
-          "listings": 1,
+          "listings": 3,
           "garmentAttributes": 4,
           "queryVersion": "attribute-v1",
           "rows": [
             {
-              "id": "134f4003-a71e-42ca-a59a-1f613efdf120",
-              "score": 0.38111111111111107,
+              "id": "433300b0-ce04-47a5-8b90-3c51d3cd375a",
+              "score": 0.8144444444444444,
               "components": {
                 "category": 0.98,
-                "colour": 0,
-                "pattern": 0,
+                "colour": 0.99,
+                "pattern": 0.95,
                 "style": 0,
                 "material": 0
               },
               "reasons": [
                 {
                   "attributeKey": "category:hoodie",
-                  "evidence": "Product title: Dither Mona Hoodie - Consumer / S"
+                  "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+                },
+                {
+                  "attributeKey": "colour:black",
+                  "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+                },
+                {
+                  "attributeKey": "pattern:solid",
+                  "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+                }
+              ]
+            },
+            {
+              "id": "edf666da-f86c-4fc7-b7f3-8ec7710e3fa9",
+              "score": 0.8144444444444444,
+              "components": {
+                "category": 0.98,
+                "colour": 0.99,
+                "pattern": 0.95,
+                "style": 0,
+                "material": 0
+              },
+              "reasons": [
+                {
+                  "attributeKey": "category:hoodie",
+                  "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+                },
+                {
+                  "attributeKey": "colour:black",
+                  "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
+                },
+                {
+                  "attributeKey": "pattern:solid",
+                  "evidence": "Product title: Relaxed Vibe Solid Hoodie - Black"
                 }
               ]
             }
@@ -124,71 +255,84 @@
       "mode": "openai",
       "openai": {
         "state": "succeeded",
-        "durationMs": 7892,
+        "durationMs": 17320,
         "details": {
           "recognition": {
             "provider": "OpenAI",
-            "responseId": "resp_0620c6ab0c6c5c48016ae5ba13b76c87d2b0444a0ebad9333c",
+            "responseId": "resp_0c0bac1677d650bd016ae5c198fbec87d2b761cc46be21f8b6",
             "model": "gpt-4.1-mini-2025-04-14",
-            "requestId": "req_fc41673224214b828402bd347690b351",
+            "requestId": "req_8973f93965264e839a41fb1024af7591",
             "usage": {
-              "input_tokens": 1658,
-              "input_tokens_details": {
-                "cache_write_tokens": 0,
-                "cached_tokens": 1024
-              },
-              "output_tokens": 140,
-              "output_tokens_details": {
-                "reasoning_tokens": 0
-              },
-              "total_tokens": 1798
-            }
-          },
-          "discovery": {
-            "provider": "OpenAI",
-            "responseId": "resp_021f65611635a693016ae5ba16111c87d2ae992668474c57c5",
-            "model": "gpt-4.1-mini-2025-04-14",
-            "requestId": "req_2d9a8383003c4362841b0b678d269288",
-            "usage": {
-              "input_tokens": 8621,
+              "input_tokens": 1666,
               "input_tokens_details": {
                 "cache_write_tokens": 0,
                 "cached_tokens": 0
               },
-              "output_tokens": 427,
+              "output_tokens": 146,
               "output_tokens_details": {
                 "reasoning_tokens": 0
               },
-              "total_tokens": 9048
+              "total_tokens": 1812
+            }
+          },
+          "discovery": {
+            "provider": "OpenAI",
+            "responseId": "resp_013fab5cbff49589016ae5c19b5b9487d285f8ffc1e694df39",
+            "model": "gpt-4.1-mini-2025-04-14",
+            "requestId": "req_d8a249bf580a44268719f3492e40c752",
+            "usage": {
+              "input_tokens": 8683,
+              "input_tokens_details": {
+                "cache_write_tokens": 0,
+                "cached_tokens": 0
+              },
+              "output_tokens": 524,
+              "output_tokens_details": {
+                "reasoning_tokens": 0
+              },
+              "total_tokens": 9207
             },
             "discovery": "OpenAI web search + local public HTML verification",
             "searchSources": [
-              "https://thegithubshop.com/collections/new-arrivals/products/zozotown-hoodie?utm_source=openai",
-              "https://thegithubshop.com/products/1538016-invertocat-pullover-hoodie?utm_source=openai",
-              "https://thegithubshop.com/products/invertocat-trans-pride-hoodie?utm_source=openai",
-              "https://thegithubshop.com/products/1540434-octokitten-hoodie?utm_source=openai",
-              "https://thegithubshop.com/collections/apparel/products/1551101-copilot-glow-in-the-dark-hoodie?utm_source=openai",
-              "https://shop.spacex.com/products/unisex-starship-heatshield-pullover-hoodie?utm_source=openai",
-              "https://shop.spacex.com/products/kid-s-starman-hoodie?utm_source=openai",
-              "https://shop.spacex.com/products/unisex-spacex-zipper-hoodie?utm_source=openai"
+              "https://www.pacsun.com/pacsun/black-solid-hoodie-3955879.html?utm_source=openai",
+              "https://www.pacsun.com/pacsun/black-solid-hoodie-3955838.html?utm_source=openai",
+              "https://www.pacsun.com/pacsun/black-solid-hoodie-0193522800161.html?utm_source=openai",
+              "https://www.macys.com/shop/product/nautica-jeans-womens-solid-zip-front-hoodie-online-only?ID=22614470&utm_source=openai",
+              "https://www.fashionnova.com/products/relaxed-vibe-solid-hoodie?color=black&utm_source=openai",
+              "https://www.fashionnova.com/en-mc/products/relaxed-vibe-solid-hoodie?color=black&utm_source=openai",
+              "https://www.fashionnova.com/en-mf/products/relaxed-vibe-solid-hoodie?color=black&utm_source=openai",
+              "https://www.fashionnova.com/en-pm/products/relaxed-vibe-solid-hoodie?color=black&utm_source=openai"
             ],
             "merchants": [
               {
+                "sources": [
+                  "https://www.pacsun.com/pacsun/black-solid-hoodie-3955879.html?utm_source=openai",
+                  "https://www.pacsun.com/pacsun/black-solid-hoodie-3955838.html?utm_source=openai",
+                  "https://www.pacsun.com/pacsun/black-solid-hoodie-0193522800161.html?utm_source=openai"
+                ],
+                "domain": "www.pacsun.com",
+                "error": null,
+                "count": 1
+              },
+              {
                 "sources": [],
-                "domain": "shop.spacex.com",
-                "error": "Merchant HTTP 429",
+                "domain": "www.macys.com",
+                "error": "Merchant HTTP 403",
                 "count": 0
               },
               {
                 "sources": [
-                  "https://thegithubshop.com/collections/new-arrivals/products/zozotown-hoodie?utm_source=openai"
+                  "https://www.fashionnova.com/products/relaxed-vibe-solid-hoodie?color=black&utm_source=openai",
+                  "https://www.fashionnova.com/en-mc/products/relaxed-vibe-solid-hoodie?color=black&utm_source=openai",
+                  "https://www.fashionnova.com/en-mf/products/relaxed-vibe-solid-hoodie?color=black&utm_source=openai",
+                  "https://www.fashionnova.com/en-pm/products/relaxed-vibe-solid-hoodie?color=black&utm_source=openai"
                 ],
-                "domain": "thegithubshop.com",
-                "error": "Merchant HTTP 404",
-                "count": 1
+                "domain": "www.fashionnova.com",
+                "error": null,
+                "count": 4
               }
             ],
-            "verifiedListings": 1
+            "verifiedListings": 5
           }
         }
       }
@@ -197,9 +341,9 @@
     "garment": {
       "category": "hoodie",
       "box": {
-        "x": 0.15,
+        "x": 0.18,
         "y": 0.1,
-        "width": 0.7,
+        "width": 0.64,
         "height": 0.8
       },
       "attributes": [
@@ -225,7 +369,7 @@
           "value": "solid",
           "source": "vision",
           "evidence": null,
-          "confidence": 0.99
+          "confidence": 0.95
         },
         {
           "key": "style:casual",
@@ -233,42 +377,62 @@
           "value": "casual",
           "source": "vision",
           "evidence": null,
-          "confidence": 0.95
+          "confidence": 0.9
         }
       ],
       "confidence": 0.98,
       "searchTerms": [
         "black hoodie",
         "casual hoodie",
-        "solid color hoodie"
+        "solid black hoodie"
       ],
-      "id": "cd42817e-fd9b-4c47-b61e-a900037da45f",
+      "id": "7041455e-30fc-46f6-9178-8fa390c71213",
       "modelId": "gpt-4.1-mini-2025-04-14",
-      "providerRequestId": "req_fc41673224214b828402bd347690b351"
+      "providerRequestId": "req_8973f93965264e839a41fb1024af7591"
     }
   },
   "fitting": {
     "handoffStatus": 200,
     "sessionStatus": 200,
     "overlayStatus": 200,
-    "illustration": true,
+    "illustration": false,
+    "aiExtracted": true,
+    "sourceUrl": "https://cdn.shopify.com/s/files/1/0293/9277/products/11-05-18_Studio_2_13-32-13_JU040_Black0521_AJ_JF.jpg?v=1763426725",
     "graph": [
       {
-        "source": "f5e7249a-8c47-4971-a226-bcc8a0f5a462",
+        "source": "baf67f40-d4bf-4b60-a99f-c4403543ac79",
         "relationship": "SELECTED",
-        "target": "cd42817e-fd9b-4c47-b61e-a900037da45f",
+        "target": "7041455e-30fc-46f6-9178-8fa390c71213",
         "label": "VestiGarment"
       },
       {
-        "source": "f5e7249a-8c47-4971-a226-bcc8a0f5a462",
+        "source": "baf67f40-d4bf-4b60-a99f-c4403543ac79",
         "relationship": "FOUND",
-        "target": "134f4003-a71e-42ca-a59a-1f613efdf120",
+        "target": "3d0803d6-e92f-4595-b34a-3df32e4a5354",
         "label": "VestiListing"
       },
       {
-        "source": "f5e7249a-8c47-4971-a226-bcc8a0f5a462",
+        "source": "baf67f40-d4bf-4b60-a99f-c4403543ac79",
+        "relationship": "FOUND",
+        "target": "edf666da-f86c-4fc7-b7f3-8ec7710e3fa9",
+        "label": "VestiListing"
+      },
+      {
+        "source": "baf67f40-d4bf-4b60-a99f-c4403543ac79",
+        "relationship": "FOUND",
+        "target": "433300b0-ce04-47a5-8b90-3c51d3cd375a",
+        "label": "VestiListing"
+      },
+      {
+        "source": "baf67f40-d4bf-4b60-a99f-c4403543ac79",
         "relationship": "RECOMMENDS",
-        "target": "134f4003-a71e-42ca-a59a-1f613efdf120",
+        "target": "edf666da-f86c-4fc7-b7f3-8ec7710e3fa9",
+        "label": "VestiListing"
+      },
+      {
+        "source": "baf67f40-d4bf-4b60-a99f-c4403543ac79",
+        "relationship": "RECOMMENDS",
+        "target": "433300b0-ce04-47a5-8b90-3c51d3cd375a",
         "label": "VestiListing"
       }
     ]

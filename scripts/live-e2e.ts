@@ -12,7 +12,7 @@ const app = await createApp((c) => {
 });
 const report: Record<string, unknown> = {
   checkedAt: new Date().toISOString(),
-  note: "Real product-image recognition, OpenAI web search, direct merchant verification, Daytona candidate curation, Neo4j ingest/ranking, scoped handoff and style-illustration asset. Physical webcam tracking and Chrome capture are separate manual checks.",
+  note: "Real product-image recognition, broad OpenAI web search, merchant verification, Daytona candidate curation, Neo4j ranking, scoped handoff and AI garment extraction from the selected product photo. Physical webcam tracking and Chrome capture remain manual checks.",
 };
 try {
   const fixtures = JSON.parse(
@@ -99,7 +99,7 @@ try {
     method: "POST",
     url: `/v1/searches/${search.id}/handoff`,
     headers,
-    payload: { listingId: search.recommendations[0].id, illustration: true },
+    payload: { listingId: search.recommendations[0].id },
   });
   const handoffCode = new URLSearchParams(
     new URL(handoff.json().url).hash.slice(1),
@@ -126,11 +126,21 @@ try {
   });
   if (fit.statusCode !== 200 || overlay.statusCode !== 200)
     throw new Error("Fitting handoff or overlay failed");
+  if (
+    !fit.json().overlay.aiExtracted ||
+    fit.json().overlay.illustration ||
+    !overlay.headers["content-type"]?.includes("image/png")
+  )
+    throw new Error(
+      "Expected real product-derived PNG preview, not a demo SVG",
+    );
   report.fitting = {
     handoffStatus: exchanged.statusCode,
     sessionStatus: fit.statusCode,
     overlayStatus: overlay.statusCode,
     illustration: fit.json().overlay.illustration,
+    aiExtracted: fit.json().overlay.aiExtracted,
+    sourceUrl: fit.json().overlay.sourceUrl,
     graph: fit.json().graph,
   };
   report.ok = true;

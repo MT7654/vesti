@@ -72,3 +72,8 @@ test("sandbox curation blocks wrong categories, provenance, hosts and incomplete
   );
   assert.throws(() => run(Array(21).fill(item)), /at most 20/);
 });
+test("public retailer product routes are not restricted to Shopify paths", () => {
+  const result = run([{ ...item, canonicalUrl: "https://shop.example/clothing/hoodie/123.html" }]);
+  assert.equal(result.listings.length, 1);
+  assert.equal(result.listings[0].priceDecimal, "58.99");
+});

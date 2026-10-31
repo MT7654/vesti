@@ -34,6 +34,7 @@ type Fitting = {
   overlay: {
     status: "ready" | "unavailable";
     illustration?: boolean;
+    aiExtracted?: boolean;
     anchors?: {
       leftShoulder: number[];
       rightShoulder: number[];
@@ -99,8 +100,12 @@ function App() {
           const r = await fetch(API + "/v1/fitting/overlay", {
             headers: { Authorization: `Bearer ${fitToken}` },
           });
-          if (!r.ok)
-            throw new Error("The garment preview asset could not load.");
+          if (!r.ok) {
+            const failure = await r.json().catch(() => null);
+            throw new Error(
+              failure?.message || "The garment preview asset could not load.",
+            );
+          }
           objectUrl = URL.createObjectURL(await r.blob());
           if (!closed) setAsset(objectUrl);
         }
@@ -194,7 +199,8 @@ function App() {
         )}{" "}
         {loading && (
           <p className="notice" role="status">
-            Opening your fitting room…
+            Preparing your selected garment preview… The first preparation can
+            take up to 2½ minutes.
           </p>
         )}
         {fitting ? (
@@ -296,6 +302,13 @@ function App() {
                     The camera overlay is a category illustration, not this
                     retailer’s actual garment. Use the product photo and
                     retailer page for the real design.
+                  </p>
+                )}
+                {fitting.overlay.aiExtracted && (
+                  <p className="fine">
+                    AI-extracted from this product’s photo. Small details may
+                    differ; use the retailer photo for the original design.
+                    First preparation can take up to 2½ minutes.
                   </p>
                 )}
                 <div className="adjustments">

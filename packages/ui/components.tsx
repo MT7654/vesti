@@ -187,7 +187,7 @@ export function ProductCard({
         </div>
         {!item.demo && item.overlayStatus === "unavailable" && (
           <p className="fine">
-            Style preview uses an illustration, not this retailer’s garment.
+            No usable product image was found for this preview.
           </p>
         )}
       </div>

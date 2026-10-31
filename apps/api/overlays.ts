@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { z } from "zod";
 import type { Recommendation } from "../../packages/contracts";
+import { garmentImage } from "../../packages/providers/garment-image";
 
 const assetSchema = z.object({
   productKey: z.string(),
@@ -16,7 +17,7 @@ const assetSchema = z.object({
   }),
 });
 export async function overlayFor(listing: Recommendation, illustrate = false) {
-  if (listing.demo || illustrate)
+  if (listing.demo)
     return {
       status: "ready" as const,
       illustration: true,
@@ -31,6 +32,19 @@ export async function overlayFor(listing: Recommendation, illustrate = false) {
     .array(assetSchema)
     .parse(JSON.parse(await readFile("assets/garments/index.json", "utf8")));
   const asset = assets.find((a) => a.productKey === listing.productKey);
+  if (!asset && listing.imageUrl)
+    return {
+      status: "ready" as const,
+      illustration: false,
+      aiExtracted: true,
+      method: "AI garment extraction from the selected merchant photo",
+      sourceUrl: listing.imageUrl,
+      anchors: {
+        leftShoulder: [0.28, 0.18],
+        rightShoulder: [0.72, 0.18],
+        hem: [0.5, 0.91],
+      },
+    };
   return asset
     ? { status: "ready" as const, illustration: false, ...asset }
     : { status: "unavailable" as const };
@@ -39,7 +53,7 @@ export async function overlayBytes(
   listing: Recommendation,
   illustrate = false,
 ) {
-  if (listing.demo || illustrate) {
+  if (listing.demo) {
     const category =
       listing.attributes.find((a) => a.kind === "category")?.value || "jacket";
     const colour = listing.attributes.find((a) => a.kind === "colour")?.value;
@@ -58,6 +72,8 @@ export async function overlayBytes(
     };
   }
   const asset = await overlayFor(listing);
+  if (asset.status === "ready" && "aiExtracted" in asset)
+    return { type: "image/png", bytes: await garmentImage(listing) };
   if (asset.status !== "ready" || !("file" in asset))
     throw new Error("Preview unavailable");
   return {
