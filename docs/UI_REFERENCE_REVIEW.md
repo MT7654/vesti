@@ -1,3 +1,5 @@
+> Historical design/specification reference. For the current implemented behavior, automatic sessions, broad live discovery, product-photo extraction and evaluation commands, use [README](../README.md), [JUDGES](../JUDGES.md) and [EVALUATION](../EVALUATION.md). This document is not a record of completed verification.
+
 # Vesti interface review
 
 Reviewed 31 October 2026 before UI implementation. Mobbin screenshots were inspected directly. These are web references, not evidence of an extension or working clothing AR system.

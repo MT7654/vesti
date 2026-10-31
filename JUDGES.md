@@ -23,8 +23,15 @@ Configure server credentials as in .env.example and start normally. Use **Try a 
 | Local retrieval | Public JSON-LD offers with observed prices | workers/discovery/runner.mjs |
 | Daytona | Isolated candidate provenance/category/URL checks and deduplication; accepted output feeds ranking | packages/providers/daytona.ts, workers/discovery/curate.mjs |
 | Neo4j | Persist relationships and compute recommendations | packages/providers/graph.ts, graph/rank-v1.cypher |
-| Browser | Pose-based illustrative overlay; frames stay local | apps/web/Camera.tsx |
+| OpenAI image edits | Extract selected product photo to transparent PNG; demo uses labelled SVG | packages/providers/garment-image.ts |
+| Browser | Pose-based overlay of the selected product; estimated placement supports partial-body framing; frames stay local | apps/web/Camera.tsx |
 
 Daytona proof includes a real sandbox ID, worker/input/output hashes, execution exit code, accepted/rejected counts and deletion status. Nosana is an alternative recognition path, not a provider used in every default run. Its original Daytona network-retrieval mode is blocked by the current account's outbound policy; the default Daytona curation step needs no outbound access.
 
 See EVALUATION.md for automated checks and docs/VERIFICATION.md for dated measurements. An award or evaluation result is not guaranteed by these instructions.
+
+## Fast review when time is limited
+
+Run `npm run evaluate` first after installation. This checks real session creation, ownership, filtering, single-use handoff and demo asset serving in a single process. Then inspect [live-e2e.json](docs/verification/live-e2e.json): the recorded live run has `ok: true`, a successful Daytona receipt with cleanup `deleted`, and fitting flags `aiExtracted: true`, `illustration: false`. This is archived evidence, not a promise that external services are currently available.
+
+If live extraction is slow or fails, use the separate demo collection to review the camera/controls. Do not interpret that fallback as successful live extraction. Clothing recognition proceeds automatically; the user is not asked to name or confirm the item.

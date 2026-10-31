@@ -2,6 +2,10 @@
 
 A working hackathon app and Chrome extension: select clothing in a YouTube video, find similar products, and preview a style with a local camera overlay. React, Fastify, TypeScript and Neo4j; one package and no separate task broker.
 
+[Download the extension ZIP](releases/vesti-extension.zip) · [Judge walkthrough](JUDGES.md) · [Evaluation](EVALUATION.md)
+
+**Current status:** local app and extension built; 16 tests pass; credentialed OpenAI → merchant verification → Daytona → Neo4j → product-photo preview flow tested. Hosted deployment and physical webcam/Chrome capture validation remain separate.
+
 ## Start here: judges and automated reviewers
 
 Vesti connects visual inspiration to a product decision: select clothing, inspect similar finds, then open a private camera preview. Its MVP covers jackets, hoodies and T-shirts; it does not claim exact identity, garment fit or automated checkout.
@@ -50,7 +54,7 @@ Click **Try a live search** for a quick demonstration: an original illustrated h
 4. Select a garment, accept the first-use crop disclosure, and click clothing inside the video. Escape cancels. Fullscreen must be exited first.
 5. Review similar products and open a style preview in the web app.
 
-The extension uses active-tab access, local storage and the side panel. Only loopback API host permissions are declared. It checks the active tab, playback frame and viewport before capturing, then crops locally; the full screenshot is never uploaded. Add the exact extension origin to `ALLOWED_ORIGINS` if your browser sends one that the pairing flow rejects.
+The extension uses active-tab access, local storage and the side panel. Local builds request loopback API access; hosted builds add only the configured HTTPS API origin. It checks the active tab, playback frame and viewport before capturing, then crops locally; the full screenshot is never uploaded. Add the exact extension origin to `ALLOWED_ORIGINS` if your browser sends one that the pairing flow rejects.
 
 ## Live providers and product evidence
 
@@ -91,7 +95,7 @@ Live checks use configured services and can incur small API charges. Reports und
 | `graph`              | Parameterized graph ranking                                   |
 | `tests`              | Security, geometry, extraction and journey checks             |
 
-The API binds to loopback. It allows two running searches, eight queued jobs and a 90-second job deadline; crops expire after five minutes. Live search records and hashed sessions survive restarts through Neo4j. Demo state and single-use fitting-room handoffs are in memory. This is a local hackathon build, not a multi-tenant hosted service.
+The API binds to loopback by default; the deployment container uses its configured public interface. It allows two running searches, eight queued jobs and a 90-second job deadline; crops expire after five minutes. Live search records and hashed sessions survive restarts through Neo4j. Demo state and single-use fitting-room handoffs are in memory. This is a local hackathon build, not a multi-tenant hosted service.
 
 ## Needle-inspired discovery interaction
 
