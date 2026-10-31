@@ -96,6 +96,7 @@ chrome.runtime.onMessage.addListener((message, sender, reply) => {
         message.point,
         message.viewport,
         { width: bitmap.width, height: bitmap.height },
+        message.selection,
       );
       const ratio = Math.min(1, 1280 / Math.max(crop.width, crop.height));
       const canvas = new OffscreenCanvas(

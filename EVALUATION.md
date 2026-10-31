@@ -47,3 +47,9 @@ Committed docs/verification reports describe past runs. Current live results can
 - `tests/pose.test.ts`: missing hips and missing pose fallbacks.
 
 No-secret evaluation validates the application contract. Live sponsor, merchant and image-generation claims require live receipts or explicitly dated archived evidence. Evaluate incomplete/manual areas separately.
+
+## Interaction update
+
+The 22-test suite includes simulated extension pointer events and region-crop geometry. For manual Chrome verification, activate Vesti, right-drag a garment, release and verify one search starts without a popup. Try Escape, tiny drags, reverse direction and a drag extending outside the video. Verify playback restoration and that capture graphics are absent from the submitted crop.
+
+In the fitting room, enable the camera, adjust placement, compare View original, freeze/resume, and Save your look. The PNG should contain the selected product title and a 2D-preview disclosure, without controls or FPS. Keep all camera frames local. Check both portrait/landscape cameras and partial upper-body framing.

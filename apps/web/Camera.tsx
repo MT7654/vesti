@@ -1,4 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  drawGarment,
+  drawForegroundHands,
+  sleeveTips,
+  cutoutAnchors,
+} from "./garment-renderer";
+import { Download, Pause, Play, Eye, SlidersHorizontal } from "lucide-react";
 import { torsoFrame } from "../../packages/contracts/pose";
 import {
   Camera as CameraIcon,
@@ -23,6 +30,10 @@ type Props = {
   scale: number;
   offset: number;
   illustration: boolean;
+  aiExtracted?: boolean;
+  productTitle: string;
+  merchant: string;
+  category?: string;
   onMetrics?: (metrics: { fps: number; poseFps: number }) => void;
 };
 export function Camera({
@@ -31,6 +42,10 @@ export function Camera({
   scale,
   offset,
   illustration,
+  aiExtracted,
+  productTitle,
+  merchant,
+  category,
   onMetrics,
 }: Props) {
   const canvas = useRef<HTMLCanvasElement>(null),
@@ -40,14 +55,36 @@ export function Camera({
     frame = useRef(0),
     generation = useRef(0),
     asset = useRef<HTMLImageElement | null>(null),
-    settings = useRef({ scale, offset, mirror: true, anchors });
+    tips = useRef<{ x: number; y: number }[]>([]),
+    calibratedAnchors = useRef<Anchors | undefined>(undefined),
+    frozenRef = useRef(false),
+    settings = useRef({
+      scale,
+      offset,
+      mirror: true,
+      anchors,
+      followArms: true,
+      showGarment: true,
+      category,
+    });
   const [enabled, setEnabled] = useState(false),
     [loading, setLoading] = useState(false),
     [mirror, setMirror] = useState(true),
     [status, setStatus] = useState("Your camera is off"),
     [error, setError] = useState(""),
-    [fps, setFps] = useState(0);
-  settings.current = { scale, offset, mirror, anchors };
+    [frozen, setFrozen] = useState(false),
+    [followArms, setFollowArms] = useState(true),
+    [showGarment, setShowGarment] = useState(true),
+    [aspect, setAspect] = useState(4 / 3);
+  settings.current = {
+    scale,
+    offset,
+    mirror,
+    anchors,
+    followArms,
+    showGarment,
+    category,
+  };
   function stop() {
     generation.current++;
     cancelAnimationFrame(frame.current);
@@ -60,6 +97,8 @@ export function Camera({
     }
     model.current?.close();
     model.current = null;
+    frozenRef.current = false;
+    setFrozen(false);
     setEnabled(false);
     setLoading(false);
     setStatus("Your camera is off");
@@ -74,14 +113,20 @@ export function Camera({
     const img = new Image();
     let alive = true;
     img.onload = () => {
-      if (alive) asset.current = img;
+      if (alive) {
+        asset.current = img;
+        tips.current = sleeveTips(img);
+        calibratedAnchors.current = aiExtracted
+          ? cutoutAnchors(img)
+          : undefined;
+      }
     };
     img.src = assetUrl;
     return () => {
       alive = false;
       asset.current = null;
     };
-  }, [assetUrl]);
+  }, [assetUrl, aiExtracted]);
   useEffect(() => {
     const close = () => stop();
     const hide = () => {
@@ -104,8 +149,9 @@ export function Camera({
       const media = await navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
-          width: { ideal: 640 },
-          height: { ideal: 480 },
+          width: { ideal: 1920 },
+          height: { ideal: 1440 },
+          aspectRatio: { ideal: 4 / 3 },
           facingMode: "user",
         },
       });
@@ -144,6 +190,7 @@ export function Camera({
         ctx = c.getContext("2d")!;
       c.width = v.videoWidth;
       c.height = v.videoHeight;
+      setAspect(c.width / c.height);
       let lastInference = 0,
         lastVideo = -1,
         lastReliable = 0,
@@ -154,27 +201,41 @@ export function Camera({
         poses = 0;
       let smoothed: NormalizedLandmark[] | null = null,
         hint = "Estimating upper-body placement…";
+      let trackedPose: NormalizedLandmark[] | undefined;
       function draw(now: number) {
         if (gen !== generation.current || !model.current) return;
+        if (frozenRef.current) {
+          frame.current = requestAnimationFrame(draw);
+          return;
+        }
         if (now - lastInference >= 66 && v.currentTime !== lastVideo) {
           lastInference = now;
           lastVideo = v.currentTime;
           try {
             const result = detector.detectForVideo(v, now);
             poses++;
-            const fit = torsoFrame(result.landmarks[0], c.width / c.height);
+            const raw = result.landmarks[0];
+            trackedPose = raw?.map((p, i) => ({
+              ...p,
+              x: trackedPose ? trackedPose[i].x * 0.4 + p.x * 0.6 : p.x,
+              y: trackedPose ? trackedPose[i].y * 0.4 + p.y * 0.6 : p.y,
+            }));
+            const fit = torsoFrame(raw, c.width / c.height);
+            const shouldersVisible =
+              !!raw && raw[11].visibility > 0.45 && raw[12].visibility > 0.45;
+            if (shouldersVisible) lastReliable = now;
             const alpha = 1 - Math.exp(-(now - lastSmooth) / 90);
-            smoothed = smoothed
-              ? fit.points.map((p, i) => ({
-                  ...p,
-                  x: smoothed![i].x + (p.x - smoothed![i].x) * alpha,
-                  y: smoothed![i].y + (p.y - smoothed![i].y) * alpha,
-                }))
-              : fit.points;
+            if (shouldersVisible || !smoothed || now - lastReliable > 900)
+              smoothed = smoothed
+                ? fit.points.map((p, i) => ({
+                    ...p,
+                    x: smoothed![i].x + (p.x - smoothed![i].x) * alpha,
+                    y: smoothed![i].y + (p.y - smoothed![i].y) * alpha,
+                  }))
+                : fit.points;
             lastSmooth = now;
-            lastReliable = now;
             hint = fit.estimated
-              ? "Estimated upper-body placement · adjust scale and position"
+              ? "Upper-body preview · fine-tune the fit if needed"
               : "Tracking your upper body";
           } catch {
             hint = "Tracking paused. Stop and enable the camera to retry.";
@@ -187,49 +248,16 @@ export function Camera({
           ctx.scale(-1, 1);
         }
         ctx.drawImage(v, 0, 0, c.width, c.height);
-        if (smoothed && asset.current) {
-          // Source shoulders and hem define the affine torso frame. Hip midpoint supplies lean.
-          const p = smoothed.map((p) => ({
-            x: p.x * c.width,
-            y: p.y * c.height,
-          }));
-          const left = p[1],
-            right = p[0],
-            hip = { x: (p[2].x + p[3].x) / 2, y: (p[2].y + p[3].y) / 2 },
-            center = { x: (left.x + right.x) / 2, y: (left.y + right.y) / 2 };
-          const a = settings.current.anchors || {
-              leftShoulder: [0.28, 0.18],
-              rightShoulder: [0.72, 0.18],
-              hem: [0.5, 0.91],
-            },
-            img = asset.current;
-          const sourceWidth =
-              (a.rightShoulder[0] - a.leftShoulder[0]) * img.width,
-            sourceHeight =
-              (a.hem[1] - (a.leftShoulder[1] + a.rightShoulder[1]) / 2) *
-              img.height;
-          const s = settings.current.scale,
-            xx = ((right.x - left.x) / sourceWidth) * s,
-            xy = ((right.y - left.y) / sourceWidth) * s,
-            yx = ((hip.x - center.x) / sourceHeight) * s,
-            yy = ((hip.y - center.y) / sourceHeight) * s;
-          const sourceX =
-              ((a.leftShoulder[0] + a.rightShoulder[0]) / 2) * img.width,
-            sourceY =
-              ((a.leftShoulder[1] + a.rightShoulder[1]) / 2) * img.height;
-          ctx.globalAlpha = 0.96;
-          ctx.transform(
-            xx,
-            xy,
-            yx,
-            yy,
-            center.x - xx * sourceX - yx * sourceY,
-            center.y -
-              xy * sourceX -
-              yy * sourceY +
-              settings.current.offset * c.height,
-          );
-          ctx.drawImage(img, 0, 0);
+        if (smoothed && asset.current && settings.current.showGarment) {
+          drawGarment(ctx, asset.current, smoothed, trackedPose, {
+            ...settings.current,
+            anchors: calibratedAnchors.current || settings.current.anchors,
+            width: c.width,
+            height: c.height,
+            tips: tips.current,
+            shortSleeves: settings.current.category === "tshirt",
+          });
+          drawForegroundHands(ctx, v, trackedPose, c.width, c.height);
         }
         ctx.restore();
         renders++;
@@ -239,7 +267,6 @@ export function Camera({
         }
         if (now - metricStart > 1000) {
           const seconds = (now - metricStart) / 1000;
-          setFps(Math.round(renders / seconds));
           onMetrics?.({
             fps: Math.round(renders / seconds),
             poseFps: Math.round(poses / seconds),
@@ -266,9 +293,74 @@ export function Camera({
       );
     }
   }
+  function toggleFreeze() {
+    frozenRef.current = !frozenRef.current;
+    setFrozen(frozenRef.current);
+  }
+  function downloadSnapshot() {
+    const source = canvas.current;
+    if (!source || !enabled || !asset.current) return;
+    frozenRef.current = true;
+    setFrozen(true);
+    const out = document.createElement("canvas");
+    out.width = source.width;
+    out.height = source.height;
+    const ctx = out.getContext("2d")!;
+    ctx.drawImage(source, 0, 0);
+    const unit = out.width / 1200;
+    const gradient = ctx.createLinearGradient(
+      0,
+      out.height * 0.65,
+      0,
+      out.height,
+    );
+    gradient.addColorStop(0, "#17122200");
+    gradient.addColorStop(1, "#171222e8");
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, out.width, out.height);
+    ctx.fillStyle = "#e1ff75";
+    ctx.font = "600 " + 22 * unit + "px system-ui";
+    ctx.fillText("VESTI / THE FITTING ROOM", 36 * unit, 52 * unit);
+    const title =
+      productTitle.length > 58 ? productTitle.slice(0, 55) + "…" : productTitle;
+    ctx.fillStyle = "white";
+    ctx.font = "600 " + 30 * unit + "px system-ui";
+    ctx.fillText(
+      title,
+      36 * unit,
+      out.height - 85 * unit,
+      out.width - 72 * unit,
+    );
+    ctx.fillStyle = "#eee8f5";
+    ctx.font = 18 * unit + "px system-ui";
+    ctx.fillText(merchant, 36 * unit, out.height - 53 * unit);
+    ctx.font = 14 * unit + "px system-ui";
+    ctx.fillText(
+      illustration
+        ? "Demo illustration · 2D appearance preview"
+        : "2D appearance preview · not a fit prediction",
+      36 * unit,
+      out.height - 25 * unit,
+    );
+    out.toBlob((blob) => {
+      if (!blob) {
+        setError("The snapshot could not be saved. Please try again.");
+        return;
+      }
+      const url = URL.createObjectURL(blob),
+        a = document.createElement("a");
+      a.href = url;
+      a.download = "vesti-my-look.png";
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }, "image/png");
+  }
   return (
     <section className="camera-section">
-      <div className={`camera-stage ${enabled ? "is-live" : ""}`}>
+      <div
+        className={`camera-stage ${enabled ? "is-live" : ""}`}
+        style={{ aspectRatio: aspect }}
+      >
         <canvas
           ref={canvas}
           aria-label="Live local camera with approximate garment overlay"
@@ -312,14 +404,51 @@ export function Camera({
         </span>
         {enabled && (
           <span className="camera-live">
-            <i /> CAMERA ON · {fps} FPS
+            <i /> {frozen ? "FRAME FROZEN" : "LIVE PREVIEW"}
           </span>
         )}
+        {enabled && (
+          <div className="look-caption">
+            {assetUrl && <img src={assetUrl} alt="Selected garment" />}
+            <div>
+              <span>YOUR SELECTED LOOK</span>
+              <strong>{productTitle}</strong>
+              <small>{merchant}</small>
+            </div>
+          </div>
+        )}
       </div>
+      {enabled && (
+        <div className="snapshot-actions">
+          <button
+            disabled={!assetUrl || !showGarment}
+            onClick={downloadSnapshot}
+          >
+            <Download size={17} /> Save your look
+          </button>
+          <button className="secondary" onClick={toggleFreeze}>
+            {frozen ? <Play size={16} /> : <Pause size={16} />}
+            {frozen ? "Resume live" : "Freeze frame"}
+          </button>
+          <button
+            className="secondary"
+            disabled={frozen}
+            aria-pressed={!showGarment}
+            onClick={() => setShowGarment(!showGarment)}
+          >
+            <Eye size={16} />
+            {showGarment ? "View original" : "Show garment"}
+          </button>
+        </div>
+      )}
       <div className="camera-toolbar">
         <div className="camera-status" role="status">
           <ScanLine size={17} />
-          <span>{status}</span>
+          <span>
+            {frozen
+              ? "Frame frozen. Save your look or resume the camera."
+              : status}
+          </span>
         </div>
         <div className="camera-actions">
           <button
@@ -335,6 +464,7 @@ export function Camera({
           </button>
           <button
             className={`secondary ${mirror ? "selected" : ""}`}
+            disabled={frozen}
             aria-pressed={mirror}
             onClick={() => setMirror(!mirror)}
           >
@@ -342,6 +472,18 @@ export function Camera({
           </button>
         </div>
       </div>
+      {enabled && (
+        <label className="arm-control">
+          <input
+            type="checkbox"
+            checked={followArms}
+            disabled={frozen}
+            onChange={(e) => setFollowArms(e.target.checked)}
+          />
+          <SlidersHorizontal size={14} /> Follow arm movement{" "}
+          <span>Face forward for the cleanest preview.</span>
+        </label>
+      )}
       {error && (
         <p className="notice error" role="alert">
           {error}

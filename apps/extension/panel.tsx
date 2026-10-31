@@ -104,7 +104,7 @@ function Panel() {
               with a closer look.
             </h2>
             <p>
-              Choose clothing in a YouTube video. Only the cropped video frame
+              Choose clothing in a YouTube video. Only your selected video region
               and click location are sent to Vesti’s recognition service.
             </p>
             <div className="privacy-note">

@@ -216,7 +216,7 @@ export function Discovery({
           onClick={onSelect}
         >
           <Crosshair size={17} />
-          {selecting ? "Click a garment in the video" : "Select a garment"}
+          {selecting ? "Drag around clothing in the video" : "Select a garment"}
         </button>
       )}
       {!search && (

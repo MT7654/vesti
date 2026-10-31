@@ -211,9 +211,9 @@ function App() {
                   <ArrowLeft size={14} /> Back to discovery
                 </button>
                 <h1>
-                  A little style.
+                  Your next look.
                   <br />
-                  <em>A little you.</em>
+                  <em>Made personal.</em>
                 </h1>
               </div>
               <div className="heading-aside">
@@ -235,10 +235,18 @@ function App() {
               <div>
                 <Camera
                   assetUrl={asset}
+                  productTitle={fitting.listing.title}
+                  merchant={fitting.listing.merchantDomain}
+                  category={
+                    fitting.listing.attributes.find(
+                      (a) => a.kind === "category",
+                    )?.value
+                  }
                   anchors={fitting.overlay.anchors}
                   scale={scale}
                   offset={offset}
                   illustration={!!fitting.overlay.illustration}
+                  aiExtracted={fitting.overlay.aiExtracted}
                   onMetrics={setMetrics}
                 />
                 <div className="below-preview">

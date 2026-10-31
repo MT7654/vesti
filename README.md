@@ -4,7 +4,7 @@ A working hackathon app and Chrome extension: select clothing in a YouTube video
 
 [Download the extension ZIP](releases/vesti-extension.zip) · [Judge walkthrough](JUDGES.md) · [Evaluation](EVALUATION.md)
 
-**Current status:** local app and extension built; 16 tests pass; credentialed OpenAI → merchant verification → Daytona → Neo4j → product-photo preview flow tested. Hosted deployment and physical webcam/Chrome capture validation remain separate.
+**Current status:** local app and extension built; 22 tests pass; credentialed OpenAI → merchant verification → Daytona → Neo4j → product-photo preview flow tested. Hosted deployment and physical webcam/Chrome capture validation remain separate.
 
 ## Start here: judges and automated reviewers
 
@@ -51,7 +51,7 @@ Click **Try a live search** for a quick demonstration: an original illustrated h
 1. Run the backend and build above.
 2. Open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and select `D:\Vesti\dist\extension`.
 3. Open a YouTube video in normal or theatre mode. Click the Vesti toolbar icon and let it connect automatically.
-4. Select a garment, accept the first-use crop disclosure, and click clothing inside the video. Escape cancels. Fullscreen must be exited first.
+4. Accept the first-use crop disclosure, then hold the right mouse button and drag a rectangle around clothing. Release to search immediately. Left-button dragging and keyboard selection also work. Escape cancels. Fullscreen must be exited first.
 5. Review similar products and open a style preview in the web app.
 
 The extension uses active-tab access, local storage and the side panel. Local builds request loopback API access; hosted builds add only the configured HTTPS API origin. It checks the active tab, playback frame and viewport before capturing, then crops locally; the full screenshot is never uploaded. Add the exact extension origin to `ALLOWED_ORIGINS` if your browser sends one that the pairing flow rejects.
@@ -64,7 +64,7 @@ OpenAI mode uses the Responses API for structured image recognition and public w
 
 ## Camera and illustrations
 
-Camera access starts only after **Enable camera**. MediaPipe model and WASM files are hosted locally; frames stay in the browser. Shoulder and hip landmarks drive a smoothed 2D overlay with scale, vertical position and mirror controls. Partial-body tracking estimates missing hips from the shoulders; when no pose is detected, an adjustable estimated placement keeps the garment visible. Leaving the page stops the camera.
+Camera access starts only after **Enable camera**. MediaPipe model and WASM files are hosted locally; frames stay in the browser. Shoulder and hip landmarks drive a smoothed 2D overlay with scale, vertical position and mirror controls. Garment length is bounded relative to shoulder width to reduce stretching. AI cutout silhouettes supply estimated shoulder/hem anchors. Optional arm-following deforms the outer sleeves conservatively; local face and hand masks restore foreground regions when landmarks are reliable. These are approximate 2D techniques, not cloth simulation or full body segmentation. Partial-body tracking estimates missing hips from the shoulders; when no pose is detected, an adjustable estimated placement keeps the garment visible. Leaving the page stops the camera. **Freeze frame** pauses rendering; **Save your look** exports a PNG at the camera’s delivered resolution with product details and an appearance-preview disclosure, without controls or FPS counters. A higher camera resolution is requested but depends on the device. **View original** provides a before/after comparison. All capture/export processing remains local.
 
 Live **Try-On** uses the selected listing’s product photo. OpenAI image editing extracts the garment onto transparency while aiming to preserve its colour, print and design. The UI labels this as AI-extracted because small details may change. First preparation can take up to 150 seconds; subsequent uses reuse the local cache. No generic green illustration is substituted for a live product. Missing photos or failed extraction produce an error or unavailable state. Demo products still use labelled original SVG illustrations. Approved transparent PNG/WebP files in `assets/garments/index.json` take priority over AI extraction. Camera placement remains approximate 2D and is not a size or fit prediction.
 
@@ -101,9 +101,9 @@ The API binds to loopback by default; the deployment container uses its configur
 
 Reference: https://github.com/Haoming9527/Needle (reviewed 31 October 2026). Vesti adopts the cursor-focused discovery pattern while retaining the requested clothing and camera-preview scope. The implementation and styling are original; no Needle source or branding was copied.
 
-Reload the unpacked extension after rebuilding. On a YouTube watch page, activate Vesti using its toolbar icon and accept the crop disclosure. Click or right-click clothing to open the nearby **Find similar** popup. Choose that action to capture and search. Close returns to selection; Escape cancels. Keyboard crosshair selection remains available. Results retain real source/price evidence, filters, retailer links, and the fitting-room handoff. The right-click interaction is active only during Vesti selection; it does not install an always-on menu across websites.
+Reload the unpacked extension after rebuilding. On a YouTube watch page, activate Vesti using its toolbar icon and accept the crop disclosure. Hold the right mouse button, drag around clothing, and release to search automatically. The video pauses while framing. The exact rectangle is cropped locally; no Find similar popup is required. Tiny drags do not trigger a search. Escape cancels and restores playback when appropriate. Keyboard users move with arrows, press Enter to anchor one corner, move to the opposite corner, and press Enter again. Results retain real source/price evidence, filters, retailer links, and the fitting-room handoff. The right-click interaction is active only during Vesti selection; it does not install an always-on menu across websites.
 
-The revised interface uses lilac surfaces, dark ink and citron accents, rounded result cards, and a wider desktop discovery panel. General-object shopping, voice, cart and simulated checkout were excluded per the user's clarification. The current automated suite and production build validate integration; the new injected popup still needs a manual unpacked-Chrome interaction check.
+The revised interface uses lilac surfaces, dark ink and citron accents, rounded result cards, and a wider desktop discovery panel. General-object shopping, voice, cart and simulated checkout were excluded per the user's clarification. The current automated suite and production build validate integration; right-button dragging still needs a manual unpacked-Chrome interaction check.
 
 Each extension result has a **Try-On** button. It creates a single-use handoff and opens the Vesti website in a new tab with that product selected. Camera access starts only when the user enables it on the website.
 

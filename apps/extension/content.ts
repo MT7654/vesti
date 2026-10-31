@@ -1,4 +1,8 @@
-import { contentRect, type Rect } from "../../packages/contracts/geometry";
+import {
+  contentRect,
+  selectionRect,
+  type Rect,
+} from "../../packages/contracts/geometry";
 declare global {
   interface Window {
     __vestiCleanup?: () => void;
@@ -6,10 +10,14 @@ declare global {
 }
 window.__vestiCleanup?.();
 let overlay: HTMLDivElement | null = null,
-  marker: HTMLDivElement | null = null;
-let video: HTMLVideoElement | null = null,
-  point = { x: 0, y: 0 },
-  capturing = false;
+  video: HTMLVideoElement | null = null;
+let capturing = false,
+  layoutFrame = 0,
+  playerStyles: HTMLStyleElement | null = null;
+let point = { x: 0, y: 0 },
+  startPoint: typeof point | null = null;
+let suppressMenuUntil = 0,
+  menuBounds: Rect | null = null;
 let record: {
   token: string;
   url: string;
@@ -20,8 +28,6 @@ let record: {
   playing: boolean;
   changed: boolean;
 } | null = null;
-let layoutFrame = 0;
-let playerStyles: HTMLStyleElement | null = null;
 function videoRect() {
   if (!video) throw new Error("Video unavailable");
   const b = video.getBoundingClientRect();
@@ -31,11 +37,16 @@ function videoRect() {
     video.videoHeight,
   );
 }
+function contains(b: Rect, p: typeof point) {
+  return (
+    p.x >= b.x && p.y >= b.y && p.x <= b.x + b.width && p.y <= b.y + b.height
+  );
+}
 function removeOverlay() {
   overlay?.remove();
   overlay = null;
-  marker = null;
   cancelAnimationFrame(layoutFrame);
+  startPoint = null;
 }
 function playbackChanged() {
   if (record) record.changed = true;
@@ -58,27 +69,17 @@ function release() {
   record = null;
   capturing = false;
 }
-async function select(x: number, y: number) {
-  if (capturing || !video) return;
-  const rect = videoRect();
-  if (
-    x < rect.x ||
-    y < rect.y ||
-    x > rect.x + rect.width ||
-    y > rect.y + rect.height
-  )
-    return;
-  capturing = true;
+function cancel() {
+  removeOverlay();
+  release();
+  void chrome.runtime
+    .sendMessage({ type: "SELECTION_CANCELLED" })
+    .catch(() => {});
+}
+function freeze() {
+  if (!video || record) return;
   const playing = !video.paused;
   video.pause();
-  removeOverlay();
-  playerStyles = document.createElement("style");
-  playerStyles.textContent =
-    ".html5-video-player .ytp-chrome-bottom,.html5-video-player .ytp-chrome-top,.html5-video-player .ytp-pause-overlay,.html5-video-player .ytp-large-play-button { visibility:hidden!important; }";
-  document.documentElement.append(playerStyles);
-  await new Promise((r) =>
-    requestAnimationFrame(() => requestAnimationFrame(r)),
-  );
   record = {
     token: crypto.randomUUID(),
     url: location.href,
@@ -91,25 +92,81 @@ async function select(x: number, y: number) {
   };
   video.addEventListener("play", playbackChanged);
   video.addEventListener("seeking", playbackChanged);
+}
+function valid() {
+  if (!record || !video) return false;
+  const b = videoRect();
+  return (
+    record.url === location.href &&
+    record.src === video.currentSrc &&
+    !record.changed &&
+    video.paused &&
+    Math.abs(video.currentTime - record.time) < 0.15 &&
+    innerWidth === record.viewport.width &&
+    innerHeight === record.viewport.height &&
+    (["x", "y", "width", "height"] as const).every(
+      (k) => Math.abs(b[k] - record!.rect[k]) < 1,
+    )
+  );
+}
+async function capture(selection: Rect) {
+  if (capturing || !video) return;
+  freeze();
+  if (!valid()) {
+    cancel();
+    return;
+  }
+  capturing = true;
+  removeOverlay();
+  playerStyles = document.createElement("style");
+  playerStyles.textContent =
+    ".html5-video-player .ytp-chrome-bottom,.html5-video-player .ytp-chrome-top,.html5-video-player .ytp-pause-overlay,.html5-video-player .ytp-large-play-button { visibility:hidden!important; }";
+  document.documentElement.append(playerStyles);
   try {
+    await new Promise((r) =>
+      requestAnimationFrame(() => requestAnimationFrame(r)),
+    );
     await chrome.runtime.sendMessage({
       type: "CAPTURE",
       ...record,
-      point: { x, y },
+      selection,
+      point: {
+        x: selection.x + selection.width / 2,
+        y: selection.y + selection.height / 2,
+      },
       videoId: new URL(location.href).searchParams.get("v"),
+    });
+  } catch (e) {
+    await chrome.storage.session.set({
+      captureError: (e as Error).message,
+      selecting: false,
     });
   } finally {
     release();
   }
 }
+function contextMenu(e: MouseEvent) {
+  const p = { x: e.clientX, y: e.clientY };
+  if (
+    (overlay && contains(videoRect(), p)) ||
+    (performance.now() < suppressMenuUntil &&
+      menuBounds &&
+      contains(menuBounds, p))
+  ) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }
+}
+document.addEventListener("contextmenu", contextMenu, true);
 function start() {
   removeOverlay();
+  release();
   if (location.hostname !== "www.youtube.com" || location.pathname !== "/watch")
     throw new Error("Open an ordinary YouTube watch page first.");
   if (document.fullscreenElement)
     throw new Error("Exit fullscreen before selecting a garment.");
   video = document.querySelector("video");
-  if (!video || !video.videoWidth)
+  if (!video?.videoWidth)
     throw new Error("Wait for the YouTube video to load.");
   const rect = videoRect();
   point = { x: rect.x + rect.width / 2, y: rect.y + rect.height / 2 };
@@ -118,93 +175,153 @@ function start() {
   overlay.setAttribute("role", "application");
   overlay.setAttribute(
     "aria-label",
-    "Select clothing. Arrow keys move the crosshair. Enter selects. Escape cancels.",
+    "Hold right mouse button and drag around clothing. Release to search. Keyboard: arrows move, Enter sets first corner, arrows resize, Enter searches. Escape cancels.",
   );
   Object.assign(overlay.style, {
     position: "fixed",
-    inset: "0",
     zIndex: "2147483647",
     cursor: "crosshair",
     outline: "none",
-    background: "rgba(0,0,0,.04)",
+    overflow: "hidden",
+    touchAction: "none",
+    userSelect: "none",
   });
-  const border = document.createElement("div");
-  Object.assign(border.style, {
+  const box = document.createElement("div");
+  Object.assign(box.style, {
     position: "fixed",
-    border: "2px solid #d3efb3",
-    borderRadius: "8px",
-    boxSizing: "border-box",
+    border: "2px solid #e1ff75",
+    borderRadius: "12px",
+    boxShadow: "0 0 0 9999px #19142666",
     pointerEvents: "none",
+    display: "none",
+    boxSizing: "border-box",
   });
+  for (const [top, left] of [
+    [true, true],
+    [true, false],
+    [false, true],
+    [false, false],
+  ]) {
+    const corner = document.createElement("span");
+    Object.assign(corner.style, {
+      position: "absolute",
+      width: "22px",
+      height: "22px",
+      borderColor: "#e1ff75",
+      borderStyle: "solid",
+      borderWidth: `${top ? 4 : 0}px ${left ? 0 : 4}px ${top ? 0 : 4}px ${left ? 4 : 0}px`,
+      top: top ? "-2px" : "auto",
+      bottom: top ? "auto" : "-2px",
+      left: left ? "-2px" : "auto",
+      right: left ? "auto" : "-2px",
+      borderRadius: "3px",
+    });
+    box.append(corner);
+  }
   const label = document.createElement("div");
   label.textContent =
-    "VESTI · Point to clothing · Click or right-click to discover · Esc to cancel";
+    "VESTI · Right-click + drag around clothing · Release to search · Esc to cancel";
   Object.assign(label.style, {
-    position: "fixed",
-    padding: "12px 18px",
-    background: "#244c3d",
-    color: "white",
-    font: "14px system-ui",
-    borderRadius: "8px",
+    position: "absolute",
+    top: "14px",
+    left: "14px",
+    right: "14px",
+    width: "fit-content",
+    padding: "12px 16px",
+    background: "#211c34ed",
+    color: "#fff",
+    font: "13px system-ui",
+    borderRadius: "12px",
     pointerEvents: "none",
   });
-  marker = document.createElement("div");
-  marker.textContent = "+";
-  Object.assign(marker.style, {
+  const crosshair = document.createElement("div");
+  crosshair.textContent = "+";
+  Object.assign(crosshair.style, {
     position: "fixed",
-    font: "32px monospace",
-    color: "#fff",
-    textShadow: "0 0 4px #000",
+    font: "28px monospace",
+    color: "white",
+    textShadow: "0 1px 4px black",
     transform: "translate(-50%,-50%)",
     pointerEvents: "none",
   });
-  overlay.append(border, label, marker);
+  overlay.append(box, label, crosshair);
   document.documentElement.append(overlay);
   overlay.focus();
   function layout() {
     if (!overlay) return;
+    if (!video?.isConnected || (record && !valid())) {
+      cancel();
+      return;
+    }
     const b = videoRect();
-    Object.assign(border.style, {
+    Object.assign(overlay.style, {
       left: `${b.x}px`,
       top: `${b.y}px`,
       width: `${b.width}px`,
       height: `${b.height}px`,
     });
-    Object.assign(label.style, {
-      left: `${Math.max(8, b.x + 10)}px`,
-      top: `${Math.max(8, b.y + 10)}px`,
+    Object.assign(crosshair.style, {
+      left: `${point.x}px`,
+      top: `${point.y}px`,
     });
-    if (marker)
-      Object.assign(marker.style, {
-        left: `${point.x}px`,
-        top: `${point.y}px`,
+    const selection = startPoint && selectionRect(startPoint, point, b);
+    box.style.display = selection ? "block" : "none";
+    if (selection)
+      Object.assign(box.style, {
+        left: `${selection.x}px`,
+        top: `${selection.y}px`,
+        width: `${selection.width}px`,
+        height: `${selection.height}px`,
       });
     layoutFrame = requestAnimationFrame(layout);
   }
   layout();
+  overlay.addEventListener("pointerdown", (e) => {
+    if (e.button !== 2 && e.button !== 0) return;
+    e.preventDefault();
+    e.stopPropagation();
+    point = { x: e.clientX, y: e.clientY };
+    startPoint = { ...point };
+    freeze();
+    overlay!.setPointerCapture(e.pointerId);
+    label.textContent = "Frame the garment. Release to find similar pieces.";
+  });
   overlay.addEventListener("pointermove", (e) => {
     point = { x: e.clientX, y: e.clientY };
   });
-  overlay.addEventListener("click", (e) => {
+  overlay.addEventListener("pointerup", (e) => {
+    if (!startPoint) return;
     e.preventDefault();
     e.stopPropagation();
-    showActions(e.clientX, e.clientY);
-  });
-  overlay.addEventListener("contextmenu", (e) => {
-    if (e.shiftKey) {
-      removeOverlay();
-      return;
+    point = { x: e.clientX, y: e.clientY };
+    const b = videoRect(),
+      selection = selectionRect(startPoint, point, b);
+    menuBounds = b;
+    suppressMenuUntil = performance.now() + 1200;
+    startPoint = null;
+    if (selection) void capture(selection);
+    else {
+      release();
+      label.textContent =
+        "Drag a larger rectangle around the garment. Esc to cancel.";
     }
-    e.preventDefault();
-    e.stopPropagation();
-    showActions(e.clientX, e.clientY);
+  });
+  overlay.addEventListener("pointercancel", cancel);
+  overlay.addEventListener("lostpointercapture", () => {
+    if (startPoint) cancel();
   });
   overlay.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      removeOverlay();
-      void chrome.runtime.sendMessage({ type: "SELECTION_CANCELLED" });
-    } else if (e.key === "Enter") {
-      void select(point.x, point.y);
+    if (e.key === "Escape") cancel();
+    else if (e.key === "Enter") {
+      if (!startPoint) {
+        startPoint = { ...point };
+        freeze();
+        label.textContent =
+          "Move to the opposite corner with arrows, then press Enter.";
+      } else {
+        const selection = selectionRect(startPoint, point, videoRect());
+        if (selection) void capture(selection);
+      }
     } else if (e.key.startsWith("Arrow")) {
       const b = videoRect(),
         d = e.shiftKey ? 2 : 12;
@@ -223,63 +340,10 @@ function start() {
           point.y + (e.key === "ArrowDown" ? d : e.key === "ArrowUp" ? -d : 0),
         ),
       );
-    }
+    } else return;
     e.preventDefault();
-  });
-}
-function showActions(x: number, y: number) {
-  if (!overlay || capturing) return;
-  const b = videoRect();
-  if (x < b.x || y < b.y || x > b.x + b.width || y > b.y + b.height) return;
-  overlay.querySelector("[data-vesti-actions]")?.remove();
-  const menu = document.createElement("div");
-  menu.dataset.vestiActions = "true";
-  menu.setAttribute("role", "dialog");
-  menu.setAttribute("aria-label", "Discover this garment");
-  Object.assign(menu.style, {
-    position: "fixed",
-    left: `${Math.max(8, Math.min(x + 12, innerWidth - 280))}px`,
-    top: `${Math.max(8, Math.min(y + 12, innerHeight - 145))}px`,
-    width: "260px",
-    padding: "16px",
-    borderRadius: "16px",
-    background: "#211c34",
-    color: "#fff",
-    boxShadow: "0 12px 45px #0005",
-    font: "14px system-ui",
-    cursor: "default",
-  });
-  const title = document.createElement("strong");
-  title.textContent = "Vesti · This caught your eye?";
-  const note = document.createElement("p");
-  note.textContent = "Find similar clothing, then preview the style.";
-  note.style.cssText =
-    "font-size:12px;line-height:1.5;color:#d6cdec;margin:8px 0 12px";
-  const find = document.createElement("button");
-  find.textContent = "Find similar →";
-  find.style.cssText =
-    "background:#d9ff75;color:#211c34;border:0;border-radius:8px;padding:10px 16px;font:600 13px system-ui;cursor:pointer";
-  const close = document.createElement("button");
-  close.textContent = "×";
-  close.setAttribute("aria-label", "Close garment actions");
-  close.style.cssText =
-    "background:transparent;color:white;border:0;font:24px system-ui;cursor:pointer;margin-left:16px";
-  find.onclick = () => void select(x, y);
-  close.onclick = () => {
-    menu.remove();
-    overlay?.focus();
-  };
-  menu.addEventListener("click", (e) => e.stopPropagation());
-  menu.addEventListener("keydown", (e) => {
     e.stopPropagation();
-    if (e.key === "Escape") {
-      menu.remove();
-      overlay?.focus();
-    }
   });
-  menu.append(title, note, find, close);
-  overlay.append(menu);
-  find.focus();
 }
 const listener = (
   message: { type: string; token?: string },
@@ -295,33 +359,31 @@ const listener = (
     }
   }
   if (message.type === "VERIFY_CAPTURE") {
-    let valid = false;
+    let verified = false;
     try {
-      const b = videoRect();
-      valid =
-        !!record &&
-        message.token === record.token &&
-        record.url === location.href &&
-        record.src === video?.currentSrc &&
-        !record.changed &&
-        video.paused &&
-        Math.abs(video.currentTime - record.time) < 0.15 &&
-        innerWidth === record.viewport.width &&
-        innerHeight === record.viewport.height &&
-        (["x", "y", "width", "height"] as const).every(
-          (k) => Math.abs(b[k] - record!.rect[k]) < 1,
-        );
+      verified = !!record && message.token === record.token && valid();
     } catch {}
-    reply({ valid });
+    reply({ valid: verified });
   }
   if (message.type === "RELEASE_CAPTURE") {
     release();
     reply({ ok: true });
   }
 };
+function leave() {
+  if (overlay || record) cancel();
+}
+function hidden() {
+  if (document.hidden) leave();
+}
+window.addEventListener("blur", leave);
+document.addEventListener("visibilitychange", hidden);
 chrome.runtime.onMessage.addListener(listener);
 window.__vestiCleanup = () => {
   removeOverlay();
   release();
+  document.removeEventListener("contextmenu", contextMenu, true);
+  window.removeEventListener("blur", leave);
+  document.removeEventListener("visibilitychange", hidden);
   chrome.runtime.onMessage.removeListener(listener);
 };

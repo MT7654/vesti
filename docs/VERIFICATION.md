@@ -36,3 +36,11 @@ The original product specification remains in `VESTI_SPEC.md`. UI reference rese
 ## Live product-image upgrade
 
 The default web search now follows public fashion-retailer citations rather than the two-store fixture catalogue. A fresh smoke run returned verified Fashion Nova offers and surfaced an ASOS block without bypassing it. `product-preview.json` records a real OpenAI transparent garment extraction from a public product photo. Live fitting now uses product-derived PNGs; generic SVGs are restricted to demo items. Earlier reports and screenshots describing illustrative live overlays document the previous implementation. Physical camera alignment remains a manual check.
+
+## 31 October 2026: drag selection and fitting studio update
+
+The extension now crops the drag rectangle and starts discovery on release. Tests exercise right-button release, Escape cancellation, tiny drags, normal context menus outside the video, reversed/clipped geometry and HiDPI mapping. These use a simulated DOM/runtime and do not claim a real Chrome installation test.
+
+The fitting renderer bounds torso stretch, estimates anchors from AI cutout silhouettes, follows reliable arm landmarks conservatively and restores face/hand regions from local frames. Browser testing used the supplied reference photograph through a temporary local canvas stream, not the physical webcam. It exposed incorrect fixed shoulder anchors, which were corrected with silhouette calibration. The actual MediaPipe model and renderer ran on that stream. Save your look downloaded a 1280 × 720 PNG and froze the displayed frame. The temporary fixture is excluded from the application and repository.
+
+Limitations: this remains approximate 2D compositing, without cloth simulation, full segmentation or removal of the original clothing. Crossed arms and loose underlying clothing can remain visible. A physical webcam and unpacked Chrome right-drag check remain manual. No new credentialed provider calls were made for this update.
