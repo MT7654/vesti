@@ -211,9 +211,29 @@ async function execute(j: Job) {
       details: { recognition: receipt },
     };
     if (needsConfirmation(garment, j.search.selection.click)) {
-      clearTimeout(j.timer);
-      await stage(j, "awaiting_confirmation");
-      return;
+      j.search.warnings.push(
+        "Searching with a best-effort clothing estimate; the selection may be uncertain.",
+      );
+      if (garment.category === "unknown") {
+        const words = garment.searchTerms.join(" ").toLowerCase();
+        garment.category = /hood/.test(words)
+          ? "hoodie"
+          : /jacket|coat/.test(words)
+            ? "jacket"
+            : "tshirt";
+        garment.attributes = garment.attributes.filter(
+          (a) => a.kind !== "category",
+        );
+        garment.attributes.push(
+          attribute(
+            "category",
+            garment.category,
+            "vision",
+            "Automatic broad clothing estimate; uncertain",
+            0.3,
+          ),
+        );
+      }
     }
     await finishDiscovery(j);
   } catch (error) {

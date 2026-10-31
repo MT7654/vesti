@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { torsoFrame } from "../../packages/contracts/pose";
 import {
   Camera as CameraIcon,
   CameraOff,
@@ -152,7 +153,7 @@ export function Camera({
         renders = 0,
         poses = 0;
       let smoothed: NormalizedLandmark[] | null = null,
-        hint = "Step back until your shoulders and hips are visible.";
+        hint = "Estimating upper-body placement…";
       function draw(now: number) {
         if (gen !== generation.current || !model.current) return;
         if (now - lastInference >= 66 && v.currentTime !== lastVideo) {
@@ -161,46 +162,20 @@ export function Camera({
           try {
             const result = detector.detectForVideo(v, now);
             poses++;
-            const p = result.landmarks[0],
-              points = p ? [p[11], p[12], p[23], p[24]] : [];
-            const visible =
-              points.length === 4 &&
-              points.every(
-                (p) =>
-                  p.visibility > 0.65 &&
-                  p.x > 0.01 &&
-                  p.x < 0.99 &&
-                  p.y > 0.01 &&
-                  p.y < 0.99,
-              );
-            if (visible) {
-              const shoulderWidth = Math.hypot(
-                  points[0].x - points[1].x,
-                  points[0].y - points[1].y,
-                ),
-                torsoHeight = Math.hypot(
-                  (points[0].x + points[1].x - points[2].x - points[3].x) / 2,
-                  (points[0].y + points[1].y - points[2].y - points[3].y) / 2,
-                );
-              if (shoulderWidth / torsoHeight < 0.35) {
-                hint = "Face the camera for a front-view preview.";
-              } else {
-                const alpha = 1 - Math.exp(-(now - lastSmooth) / 90);
-                smoothed = smoothed
-                  ? points.map((p, i) => ({
-                      ...p,
-                      x: smoothed![i].x + (p.x - smoothed![i].x) * alpha,
-                      y: smoothed![i].y + (p.y - smoothed![i].y) * alpha,
-                    }))
-                  : points;
-                lastSmooth = now;
-                lastReliable = now;
-                hint = asset.current
-                  ? "Tracking your shoulders and hips"
-                  : "Camera ready · product preview unavailable";
-              }
-            } else
-              hint = "Step back until your shoulders and hips are visible.";
+            const fit = torsoFrame(result.landmarks[0], c.width / c.height);
+            const alpha = 1 - Math.exp(-(now - lastSmooth) / 90);
+            smoothed = smoothed
+              ? fit.points.map((p, i) => ({
+                  ...p,
+                  x: smoothed![i].x + (p.x - smoothed![i].x) * alpha,
+                  y: smoothed![i].y + (p.y - smoothed![i].y) * alpha,
+                }))
+              : fit.points;
+            lastSmooth = now;
+            lastReliable = now;
+            hint = fit.estimated
+              ? "Estimated upper-body placement · adjust scale and position"
+              : "Tracking your upper body";
           } catch {
             hint = "Tracking paused. Stop and enable the camera to retry.";
           }
@@ -212,7 +187,7 @@ export function Camera({
           ctx.scale(-1, 1);
         }
         ctx.drawImage(v, 0, 0, c.width, c.height);
-        if (smoothed && asset.current && now - lastReliable < 300) {
+        if (smoothed && asset.current) {
           // Source shoulders and hem define the affine torso frame. Hip midpoint supplies lean.
           const p = smoothed.map((p) => ({
             x: p.x * c.width,
@@ -242,8 +217,7 @@ export function Camera({
               ((a.leftShoulder[0] + a.rightShoulder[0]) / 2) * img.width,
             sourceY =
               ((a.leftShoulder[1] + a.rightShoulder[1]) / 2) * img.height;
-          ctx.globalAlpha =
-            Math.min(1, (300 - (now - lastReliable)) / 100) * 0.96;
+          ctx.globalAlpha = 0.96;
           ctx.transform(
             xx,
             xy,

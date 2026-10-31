@@ -133,7 +133,7 @@ export async function identify(
   selection: Selection,
   signal: AbortSignal,
 ): Promise<{ garment: Garment; receipt: Record<string, unknown> }> {
-  const prompt = `Inspect ONLY the garment under normalized click ${JSON.stringify(selection.click)} in this image. Coordinates are relative to the whole image. Do not identify people or infer brands. Return JSON: {category: "jacket"|"hoodie"|"tshirt"|"unknown", box:{x,y,width,height}, confidence:0..1, attributes:[{key:"colour:olive",kind:"colour"|"pattern"|"style"|"material"|"category",value:"olive",confidence:0..1,source:"vision",evidence:null}], searchTerms:["short clothing query"]}. Box must be inside [0,1]. Use unknown and low confidence for an ambiguous click, unsupported clothing, or no garment. Materials are tentative; omit uncertain details. Limit attributes to 8.`;
+  const prompt = `Inspect ONLY the garment under normalized click ${JSON.stringify(selection.click)} in this image. Coordinates are relative to the whole image. Do not identify people or infer brands. Return JSON: {category: "jacket"|"hoodie"|"tshirt"|"unknown", box:{x,y,width,height}, confidence:0..1, attributes:[{key:"colour:olive",kind:"colour"|"pattern"|"style"|"material"|"category",value:"olive",confidence:0..1,source:"vision",evidence:null}], searchTerms:["short clothing query"]}. Box must be inside [0,1]. For ambiguous clothing choose the closest supported category with low confidence; use unknown only if no supported garment is recognizable. Materials are tentative; omit uncertain details. Limit attributes to 8.`;
   let result,
     lastIssues = "";
   for (let attempt = 0; attempt < 2; attempt++) {

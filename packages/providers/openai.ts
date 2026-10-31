@@ -83,7 +83,7 @@ export async function identifyOpenAI(
           content: [
             {
               type: "input_text",
-              text: `Identify the jacket, hoodie or T-shirt under normalized click ${JSON.stringify(selection.click)}. Coordinates refer to the entire image. Return a bounding box in normalized 0..1 coordinates entirely inside the image, visible colour/pattern/style attributes, confidence and short shopping terms. Do not identify people or infer brands or fabric composition. Source is vision and evidence is null. Use category unknown and low confidence if ambiguous, unsupported, or not clothing. Limit to 8 attributes. Keys are kind:value. A jacket with buttons may have style casual or utility only if visible.`,
+              text: `Identify the jacket, hoodie or T-shirt under normalized click ${JSON.stringify(selection.click)}. Coordinates refer to the entire image. Return a bounding box in normalized 0..1 coordinates entirely inside the image, visible colour/pattern/style attributes, confidence and short shopping terms. Do not identify people or infer brands or fabric composition. Source is vision and evidence is null. For ambiguous clothing choose the closest supported category and retain low confidence. Use unknown only when no supported garment is recognizable. Limit to 8 attributes. Keys are kind:value. A jacket with buttons may have style casual or utility only if visible.`,
             },
             {
               type: "input_image",

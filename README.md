@@ -60,7 +60,7 @@ OpenAI mode uses the Responses API for structured image recognition and public w
 
 ## Camera and illustrations
 
-Camera access starts only after **Enable camera**. MediaPipe model and WASM files are hosted locally; frames stay in the browser. Shoulder and hip landmarks drive a smoothed 2D overlay with scale, vertical position and mirror controls. Lost or unreliable tracking hides the overlay; leaving the page stops the camera.
+Camera access starts only after **Enable camera**. MediaPipe model and WASM files are hosted locally; frames stay in the browser. Shoulder and hip landmarks drive a smoothed 2D overlay with scale, vertical position and mirror controls. Partial-body tracking estimates missing hips from the shoulders; when no pose is detected, an adjustable estimated placement keeps the garment visible. Leaving the page stops the camera.
 
 No licensed transparent retailer garment assets were supplied. **Try-On** therefore uses an explicitly labelled original category illustration. It is not a rendering of that retailer's garment, a size recommendation, or a fit guarantee. Approved transparent PNG/WebP assets can be registered in `assets/garments/index.json`; see its README. Demo products have no merchant checkout links.
 
@@ -104,3 +104,5 @@ The revised interface uses lilac surfaces, dark ink and citron accents, rounded 
 Each extension result has a **Try-On** button. It creates a single-use handoff and opens the Vesti website in a new tab with that product selected. Camera access starts only when the user enables it on the website.
 
 Deployment: see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for the Vercel frontend, persistent HTTPS API, and extension API-origin configuration. Captured images are now decoded directly into bytes without data-URL fetches; connection errors identify the configured API address separately from capture errors.
+
+Recognition proceeds automatically using the best supported clothing estimate. Uncertainty is disclosed without a user category-confirmation step. Partial-body overlays are estimates, not measurements; scale and position remain adjustable.

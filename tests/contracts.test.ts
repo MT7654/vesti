@@ -75,7 +75,7 @@ test("money stays exact and filters require a currency", () => {
     1,
   );
 });
-test("invalid confidence and out-of-image boxes are rejected; wrong click asks for confirmation", () => {
+test("invalid confidence and out-of-image boxes are rejected; wrong click is flagged as uncertain", () => {
   const g = demoGarment();
   assert.ok(!visionSchema.safeParse({ ...g, confidence: 1.1 }).success);
   assert.ok(

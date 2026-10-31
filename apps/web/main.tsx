@@ -343,8 +343,9 @@ function App() {
                     disabled={!asset}
                   />
                   <p className="fine">
-                    Face forward and keep your shoulders and hips in the frame.
-                    Adjust the illustration to explore the look.
+                    Face the camera. A partial upper-body view is enough for an
+                    estimated preview. Adjust the illustration to explore the
+                    look.
                   </p>
                 </div>
                 <div className="fit-note">
