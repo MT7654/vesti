@@ -139,6 +139,39 @@ export async function createApp(onPairCode: (code: string) => void = () => {}) {
     liveValidation:
       "Run npm run smoke; configuration alone does not prove readiness.",
   }));
+  async function issueSession(origin: string) {
+    const token = opaque();
+    const session = {
+      id: crypto.randomUUID(),
+      origin,
+      expires: Date.now() + 86400000,
+    };
+    sessions.set(hash(token), session);
+    await graph
+      .saveAuth(session.id, hash(token), origin, session.expires)
+      .catch(() => {});
+    return {
+      token,
+      expiresAt: new Date(session.expires).toISOString(),
+      webOrigin: config.WEB_ORIGIN,
+    };
+  }
+  const sessionAttempts = new Map<string, number[]>();
+  app.post("/v1/session", async (req, reply) => {
+    const origin = req.headers.origin;
+    if (!origin || !pairingOrigin(origin))
+      return reply.code(403).send({ message: "Origin not allowed" });
+    const recent = (sessionAttempts.get(req.ip) || []).filter(
+      (t) => t > Date.now() - 600000,
+    );
+    if (recent.length >= 30)
+      return reply
+        .code(429)
+        .send({ message: "Too many connections. Please wait ten minutes." });
+    recent.push(Date.now());
+    sessionAttempts.set(req.ip, recent);
+    return issueSession(origin);
+  });
   app.post("/v1/pair", async (req, reply) => {
     const body = z.object({ code: z.string().length(6) }).parse(req.body),
       origin = req.headers.origin || config.WEB_ORIGIN;
@@ -158,25 +191,11 @@ export async function createApp(onPairCode: (code: string) => void = () => {}) {
         message:
           "Pairing code is incorrect or expired. Use the current API terminal code.",
       });
-    const token = opaque(),
-      session = {
-        id: crypto.randomUUID(),
-        origin,
-        expires: Date.now() + 86400000,
-      };
-    sessions.set(hash(token), session);
-    pairingOrigins.add(origin);
-    await graph
-      .saveAuth(session.id, hash(token), origin, session.expires)
-      .catch(() => {});
+    const issued = await issueSession(origin);
     code = String(randomInt(100000, 1000000));
     codeExpires = Date.now() + 600000;
     onPairCode(code);
-    return {
-      token,
-      expiresAt: new Date(session.expires).toISOString(),
-      webOrigin: config.WEB_ORIGIN,
-    };
+    return issued;
   });
   app.post("/v1/searches", async (req, reply) => {
     const session = await auth(req),

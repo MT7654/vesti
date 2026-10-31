@@ -11,7 +11,7 @@ Vesti connects visual inspiration to a product decision: select clothing, inspec
 - [Contributor guidance](AGENTS.md)
 - [Deployment](docs/DEPLOYMENT.md) · [Measured verification](docs/VERIFICATION.md)
 
-No credentials: `npm ci`, then `npm run evaluate`. For the browser, run `npm run dev:demo`, pair using the terminal code and choose **Explore the demo collection**. This creates three labelled sample products without calling external providers. Installation and the initial camera-model download require network access.
+No credentials: `npm ci`, then `npm run evaluate`. For the browser, run `npm run dev:demo`, connect automatically and choose **Explore the demo collection**. This creates three labelled sample products without calling external providers. Installation and the initial camera-model download require network access.
 
 ```mermaid
 flowchart LR
@@ -38,7 +38,7 @@ npm run build
 npm run dev
 ```
 
-Open http://localhost:5173 and enter the one-time pairing code printed in the terminal. A fresh clone has no credentials; configure your own `.env` for live mode. `LIVE_PROVIDER=auto` uses the OpenAI key when present. Standard `OPENAI_API_KEY` and the existing `OpenAI_API_Key` spelling are supported.
+Open http://localhost:5173 and Vesti connects automatically. A fresh clone has no credentials; configure your own `.env` for live mode. `LIVE_PROVIDER=auto` uses the OpenAI key when present. Standard `OPENAI_API_KEY` and the existing `OpenAI_API_Key` spelling are supported.
 
 Click **Try a live search** for a quick demonstration: an original illustrated hoodie goes through real image recognition, public web search, merchant-page verification, Daytona candidate curation and graph ranking. Alternatively upload a frame and click the garment. **Explore the demo collection** works without model calls and clearly labels its illustrated products and sample prices.
 
@@ -46,7 +46,7 @@ Click **Try a live search** for a quick demonstration: an original illustrated h
 
 1. Run the backend and build above.
 2. Open `chrome://extensions`, enable Developer mode, choose **Load unpacked**, and select `D:\Vesti\dist\extension`.
-3. Open a YouTube video in normal or theatre mode. Click the Vesti toolbar icon and pair with the terminal code. Each pairing consumes its code; the terminal prints a replacement.
+3. Open a YouTube video in normal or theatre mode. Click the Vesti toolbar icon and let it connect automatically.
 4. Select a garment, accept the first-use crop disclosure, and click clothing inside the video. Escape cancels. Fullscreen must be exited first.
 5. Review similar products and open a style preview in the web app.
 

@@ -12,7 +12,7 @@ npm run build
 
 `evaluate` runs the real Fastify application through request injection. It requires no browser, open port, camera, model or database. See tests/api.test.ts for exact requests and assertions. A failure exits nonzero; no successful result is hardcoded by the runner.
 
-Assertions include successful pairing; demo creation and idempotent retries; cross-session access denied; disallowed origin rejected; filtering; a single-use handoff that cannot be reused; scoped fitting metadata and SVG asset retrieval. The demo response has `demo: true`, synthetic/unverified products, and no successful live-provider receipts. Full `npm test` additionally checks capture geometry, exact prices, SSRF rules, merchant parsing, Daytona curation policy and local image decoding.
+Assertions include successful automatic session creation; demo creation and idempotent retries; cross-session access denied; disallowed origin rejected; filtering; a single-use handoff that cannot be reused; scoped fitting metadata and SVG asset retrieval. The demo response has `demo: true`, synthetic/unverified products, and no successful live-provider receipts. Full `npm test` additionally checks capture geometry, exact prices, SSRF rules, merchant parsing, Daytona curation policy and local image decoding.
 
 `npm run build` downloads the MediaPipe model if missing. Internet access is required for npm installation and that initial asset download. If the model host is unreachable, `evaluate` still runs after dependencies are installed; report the build/camera check as blocked rather than passed.
 
@@ -26,7 +26,7 @@ Assertions include successful pairing; demo creation and idempotent retries; cro
 | Merchant or provider failure | Error details, then explicit labelled demo button | Successful failed-provider execution |
 | Internet during review | Source and archived reports; installed dependency tests | Fresh live calls or fresh installation |
 
-The demo launcher clears service configuration in child processes without editing .env. It retains pairing and ownership checks. Start it separately from an already-running dev server to avoid port conflicts. API-only evaluation needs neither server process.
+The demo launcher clears service configuration in child processes without editing .env. It retains session ownership checks. Start it separately from an already-running dev server to avoid port conflicts. API-only evaluation needs neither server process.
 
 ## Credentialed evidence
 

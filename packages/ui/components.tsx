@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ArrowUpRight,
   Check,
@@ -103,62 +103,35 @@ export function GarmentArt({
   );
 }
 export function Pairing({ onPaired }: { onPaired: (token: string) => void }) {
-  const [code, setCode] = useState(""),
-    [error, setError] = useState(""),
-    [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [retry, setRetry] = useState(0);
+  useEffect(() => {
+    let active = true;
+    setError("");
+    void request<{ token: string }>("/v1/session", null, { method: "POST" })
+      .then((r) => {
+        if (active) onPaired(r.token);
+      })
+      .catch((e) => {
+        if (active) setError(e.message);
+      });
+    return () => {
+      active = false;
+    };
+  }, [retry]);
   return (
-    <section className="pairing">
-      <span className="eyebrow">Connect once. Explore freely.</span>
-      <h2>Meet your local Vesti.</h2>
-      <p>
-        Enter the six-digit pairing code from the API terminal. Your session
-        lasts 24 hours.
-      </p>
-      <form
-        onSubmit={async (e) => {
-          e.preventDefault();
-          setBusy(true);
-          setError("");
-          try {
-            const r = await request<{ token: string }>("/v1/pair", null, {
-              method: "POST",
-              body: JSON.stringify({ code }),
-            });
-            onPaired(r.token);
-          } catch (e) {
-            setError((e as Error).message);
-          } finally {
-            setBusy(false);
-          }
-        }}
-      >
-        <label htmlFor="pair-code">Pairing code</label>
-        <div className="input-row">
-          <input
-            id="pair-code"
-            value={code}
-            onChange={(e) =>
-              setCode(e.target.value.replace(/\D/g, "").slice(0, 6))
-            }
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            placeholder="000000"
-            required
-            pattern="[0-9]{6}"
-          />
-          <button disabled={busy || code.length !== 6}>
-            {busy ? "Connecting…" : "Connect"}
+    <section className="pairing" aria-live="polite">
+      {error ? (
+        <>
+          <h2>Couldn’t connect to Vesti.</h2>
+          <p role="alert">{error}</p>
+          <button onClick={() => setRetry((n) => n + 1)}>
+            Retry connection
           </button>
-        </div>
-      </form>
-      {error && (
-        <p role="alert" className="error">
-          {error}
-        </p>
+        </>
+      ) : (
+        <p role="status">Opening Vesti…</p>
       )}
-      <p className="fine">
-        Run <code>npm run dev</code> in the Vesti folder to start the app.
-      </p>
     </section>
   );
 }

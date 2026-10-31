@@ -12,14 +12,17 @@ test("demo journey enforces ownership, idempotency, scoped single-use handoffs a
   const pair = async () => {
     const r = await app.inject({
       method: "POST",
-      url: "/v1/pair",
+      url: "/v1/session",
       headers: { origin },
-      payload: { code },
     });
     assert.equal(r.statusCode, 200, r.body);
     return r.json().token as string;
   };
   try {
+    const deniedSession = await app.inject({ method: "POST", url: "/v1/session", headers: { origin: "https://untrusted.example" } });
+    assert.equal(deniedSession.statusCode, 403);
+    const noOrigin = await app.inject({ method: "POST", url: "/v1/session" });
+    assert.equal(noOrigin.statusCode, 403);
     const a = await pair(),
       b = await pair(),
       headers = {

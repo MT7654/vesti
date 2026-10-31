@@ -88,7 +88,7 @@ function Panel() {
               setSettings(false);
             }}
           >
-            Pair a new session
+            Reconnect
           </button>
         </div>
       )}

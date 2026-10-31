@@ -5,7 +5,7 @@ Vesti turns clothing seen in a video into similar product recommendations and a 
 ## Two-minute no-secret route
 
 1. `npm ci`, then `npm run dev:demo`. Keep both ports 3001 and 5173 available.
-2. Open http://localhost:5173. Pair using the six-digit code in the terminal.
+2. Open http://localhost:5173. Vesti connects automatically; no pairing code is needed.
 3. Choose **Explore the demo collection**, not the live search button. Expect three original illustrative products with sample prices and demo labels.
 4. Apply a category or currency-specific price filter; reset to restore the collection.
 5. Click **Try-On**. The web flow opens the fitting view; in the Chrome extension the same action opens the website in a new tab.

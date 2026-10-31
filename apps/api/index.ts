@@ -15,9 +15,7 @@ await cleanupOrphans().catch(() =>
     "Daytona orphan cleanup could not finish; provider auto-stop remains enabled.",
   ),
 );
-const app = await createApp((code) =>
-  console.log(`Vesti pairing code: ${code} (single use, valid 10 minutes)`),
-);
+const app = await createApp();
 await app.listen({ host: config.HOST, port: config.PORT });
 console.log(
   `Vesti API: http://${config.HOST}:${config.PORT} | Web: ${config.WEB_ORIGIN}`,
